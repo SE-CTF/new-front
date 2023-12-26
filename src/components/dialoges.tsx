@@ -24,26 +24,39 @@ import React from "react";
 import BasicPopover from "./basicpopover";
 import ReactMarkdown from "react-markdown";
 import gfm from "remark-gfm";
+import { useAuth } from "../context/AuthContext";
 interface DialogProps {
   open: boolean;
   handleclose: () => void;
   title: string;
   solved: boolean;
+  description: string;
+  score: number;
+  category: string;
+  hints: string[];
 }
 
-function DialogComponent({ open, handleclose, title, solved }: DialogProps) {
+function DialogComponent({
+  open,
+  handleclose,
+  title,
+  solved,
+  description,
+  score,
+  category,
+  hints
+}: DialogProps) {
   const StyledMarkdown = styled("div")({
-    // Add your global styles for the entire markdown content
     fontFamily: "vazirmatn",
     fontSize: "16px",
     lineHeight: "1.5",
     color: "white",
   });
   const { register, handleSubmit } = useForm();
+  const { user, isUserSignedIn } = useAuth();
   const onSubmit = (data: any) => {
     console.log("Form submitted:", data);
   };
-  let hints: string[] = ["hint1", "hint2"];
   const customInputLabelStyle = {
     color: "#3498db",
     fontFamily: "vazirmatn",
@@ -54,6 +67,8 @@ function DialogComponent({ open, handleclose, title, solved }: DialogProps) {
     borderRadius: "8px",
     fontFamily: "vazirmatn",
   };
+  console.log(category);
+  
   return (
     <>
       <Dialog
@@ -92,7 +107,7 @@ function DialogComponent({ open, handleclose, title, solved }: DialogProps) {
               <DialogContentText>
                 {" "}
                 <Typography fontFamily={"vazirmatn"} color="white" variant="h6">
-                  برچسب ها:
+                   دسته بندی:{category}
                 </Typography>
               </DialogContentText>
               <br />
@@ -105,14 +120,14 @@ function DialogComponent({ open, handleclose, title, solved }: DialogProps) {
               <DialogContentText>
                 <StyledMarkdown>
                   <ReactMarkdown remarkPlugins={[gfm]}>
-                    *توضیحات سوال* با استفاده از ~markdown~ که یه چیزی میشه.
+                    {description}
                   </ReactMarkdown>
                 </StyledMarkdown>
               </DialogContentText>
             </Grid>
             <Grid item xs={2}>
               <div style={{ display: "flex", flexDirection: "row" }}>
-                {hints.map((value, index) => (
+                {hints?.map((value, index) => (
                   <BasicPopover hint={value} id={index.toString()} />
                 ))}
               </div>
@@ -124,7 +139,7 @@ function DialogComponent({ open, handleclose, title, solved }: DialogProps) {
               <Grid item xs={10}>
                 <TextField
                   {...register("flag")}
-                  disabled={solved}
+                  disabled={solved || !isUserSignedIn}
                   InputLabelProps={{
                     style: customInputLabelStyle,
                   }}

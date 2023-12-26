@@ -1,5 +1,4 @@
-// tokenService.js
-const TOKEN_KEY = "secret-key";
+const TOKEN_KEY = "django-insecure-on0o@ckw6blrw^une2u%lqix7c&$32gn$oz-##@82f_u40af2z";
 
 const TokenService = {
   saveToken: (token: string) => {
@@ -23,6 +22,13 @@ const TokenService = {
 
     return expirationDate < new Date();
   },
+
+  decodeToken : () => {
+    const token = TokenService.getToken();
+    if (!token) return null;
+    return JSON.parse(atob(token.split(".")[1]))
+
+  }
 };
 
 export default TokenService;

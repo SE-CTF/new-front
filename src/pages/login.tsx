@@ -19,6 +19,8 @@ import {
   FormControlLabel,
   IconButton,
   InputAdornment,
+  Alert,
+  Snackbar,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -28,6 +30,7 @@ import { VisibilityOff, Visibility } from "@mui/icons-material";
 import { Link } from "react-router-dom";
 import sample_logo from "../assets/sample_logo.png";
 import TokenService from "../utils/tokenAccess";
+import { Credentials, useAuth } from '../context/AuthContext';
 
 interface FormData {
   email: string;
@@ -38,6 +41,8 @@ const LoginForm = () => {
   const { register, handleSubmit } = useForm();
   const [showPassword, setShowPassword] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
+  const {signIn } = useAuth();
+  const [open, setOpen] = useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -50,15 +55,19 @@ const LoginForm = () => {
   const onSubmit = (data: any) => {
     console.log("Form submitted:", data);
     axios
-      .post("http://localhost:8000/api/auth/login", data)
+      .post("http://127.0.0.1:8000/api/auth/login", data)
       .then(function (response) {
         console.log(response);
         const token = response.data.access;
-        TokenService.saveToken(token);
+        const credentials : Credentials = {
+          email : response.data.email
+        }
+        signIn(credentials , token)
         setIsLoggedIn(true);
       })
       .catch(function (error) {
         console.log(error);
+        setOpen(true)
       });
   };
   const customInputLabelStyle = {
@@ -71,9 +80,25 @@ const LoginForm = () => {
     borderRadius: "8px",
     fontFamily: "vazirmatn",
   };
+  const handleClose = () => {
+    setOpen(false);
+  };
   return (
     <>
       {isLoggedIn && <Navigate to="/" replace={true} />}
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleClose}
+      >
+        <Alert severity="error">
+          <Typography fontFamily={"vazirmatn"}>
+            {" "}
+            ایمیل یا رمز عبور اشتباه میباشد.
+          </Typography>
+        </Alert>
+      </Snackbar>
       <Paper
         square={false}
         elevation={10}

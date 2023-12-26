@@ -20,7 +20,6 @@ export default function BasicPopover({ hint, id }: PopoverProps) {
     setAnchorEl(null);
   };
   const open = Boolean(anchorEl);
-  console.log(id);
 
   return (
     <div>

@@ -14,20 +14,9 @@ import School from "./pages/school";
 import TokenService from "./utils/tokenAccess";
 import { useLocation } from "react-router-dom";
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const location = useLocation();
-
-  useEffect(() => {
-    const token = localStorage.getItem("secret-key");
-
-    const isValidToken = token && token.length > 0;
-    console.log(isValidToken);
-    setIsAuthenticated(isValidToken);
-  }, [location]);
-
   return (
     <>
-      <Navbar isAuthenticated={isAuthenticated} />
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<LoginForm />} />

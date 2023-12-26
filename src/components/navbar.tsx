@@ -17,10 +17,12 @@ import AssessmentIcon from "@mui/icons-material/Assessment";
 import ForumIcon from "@mui/icons-material/Forum";
 import SchoolIcon from "@mui/icons-material/School";
 import Person2Icon from "@mui/icons-material/Person2";
-interface NavBarProps {
-  isAuthenticated: boolean;
-}
-function Navbar({ isAuthenticated }: NavBarProps) {
+import { useAuth } from "../context/AuthContext";
+import CustomizedMenus from "./customMenu";
+import LoginIcon from "@mui/icons-material/Login";
+import AirOutlinedIcon from "@mui/icons-material/AirOutlined";
+function Navbar() {
+  const { user, isUserSignedIn } = useAuth();
   const containerStyle = {
     height: "75px",
   };
@@ -46,7 +48,7 @@ function Navbar({ isAuthenticated }: NavBarProps) {
           </Typography>
         </Link>
         <Grid container spacing={10}>
-          <Grid item xs={7}>
+          <Grid item xs={isUserSignedIn ? 7 : 6}>
             <Box style={{ display: "flex", justifyContent: "flex-end" }}>
               <Link to="/challanges">
                 <Button
@@ -94,22 +96,24 @@ function Navbar({ isAuthenticated }: NavBarProps) {
                   فروم
                 </Typography>
               </Button>
-              <Link to="/Question">
-                <Button
-                  sx={{
-                    marginRight: "30px",
-                    "&:focus": {
-                      outline: "none",
-                    },
-                  }}
-                  startIcon={<AirlineSeatLegroomExtraIcon />}
-                >
-                  {" "}
-                  <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
-                    طرح سوال
-                  </Typography>
-                </Button>
-              </Link>
+              {isUserSignedIn && (
+                <Link to="/Question">
+                  <Button
+                    sx={{
+                      marginRight: "30px",
+                      "&:focus": {
+                        outline: "none",
+                      },
+                    }}
+                    startIcon={<AirlineSeatLegroomExtraIcon />}
+                  >
+                    {" "}
+                    <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
+                      طرح سوال
+                    </Typography>
+                  </Button>
+                </Link>
+              )}
               <Link to="/school">
                 <Button
                   sx={{
@@ -128,61 +132,55 @@ function Navbar({ isAuthenticated }: NavBarProps) {
               </Link>
             </Box>
           </Grid>
-          <Grid item xs={1}></Grid>
-          <Grid item xs={4}>
-            {!isAuthenticated && (
-              <Box style={{ display: "flex", justifyContent: "flex-end" }}>
-                <Link to="/signup">
-                  <Button
-                    sx={{
-                      marginRight: "30px",
-                      "&:focus": {
-                        outline: "none",
-                      },
-                    }}
-                  >
-                    {" "}
-                    <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
-                      ثبت نام
-                    </Typography>
-                  </Button>
-                </Link>
-                <Link to="/login">
-                  <Button
-                    sx={{
-                      marginRight: "30px",
-                      "&:focus": {
-                        outline: "none",
-                      },
-                    }}
-                  >
-                    {" "}
-                    <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
-                      ورود
-                    </Typography>
-                  </Button>
-                </Link>
-              </Box>
-            )}
-            {isAuthenticated && (
-              <Link to="/school">
-                <Button
-                  sx={{
-                    marginRight: "30px",
-                    "&:focus": {
-                      outline: "none",
-                    },
-                  }}
-                  startIcon={<Person2Icon />}
-                >
-                  {" "}
-                  <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
-                    پروفایل
-                  </Typography>
-                </Button>
-              </Link>
-            )}
-          </Grid>
+          {!isUserSignedIn && (
+            <>
+              <Grid item xs={isUserSignedIn ? 1 : 2}></Grid>
+              <Grid item xs={4}>
+                <Box style={{ display: "flex", justifyContent: "flex-end" }}>
+                  <Link to="/signup">
+                    <Button
+                      startIcon={<AirOutlinedIcon />}
+                      sx={{
+                        marginRight: "30px",
+                        "&:focus": {
+                          outline: "none",
+                        },
+                      }}
+                    >
+                      {" "}
+                      <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
+                        ثبت نام
+                      </Typography>
+                    </Button>
+                  </Link>
+                  <Link to="/login">
+                    <Button
+                      startIcon={<LoginIcon />}
+                      sx={{
+                        marginRight: "30px",
+                        "&:focus": {
+                          outline: "none",
+                        },
+                      }}
+                    >
+                      {" "}
+                      <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
+                        ورود
+                      </Typography>
+                    </Button>
+                  </Link>
+                </Box>
+              </Grid>{" "}
+            </>
+          )}
+          {isUserSignedIn && (
+            <>
+              <Grid item xs={3}></Grid>
+              <Grid item xs={2}>
+                <CustomizedMenus />
+              </Grid>
+            </>
+          )}
         </Grid>
       </Toolbar>
     </AppBar>

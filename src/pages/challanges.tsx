@@ -10,7 +10,29 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import axios from "axios";
 
+interface RawDataCell {
+  title: string;
+  score: number;
+  category: string;
+}
+
+interface DataCell {
+  id: number;
+  title: string;
+  diff: string;
+  score: number;
+  category: string;
+  solved: boolean;
+}
+interface selectedCellType {
+  title: string;
+  description: string;
+  score: number;
+  hints: string[];
+  category: string;
+}
 createTheme(
   "solarized",
   {
@@ -47,35 +69,35 @@ const customStyles = {
 
   rows: {
     style: {
-      minHeight: "72px", 
+      minHeight: "72px",
       cursor: "pointer",
     },
   },
   headCells: {
     style: {
-      paddingLeft: "8px", 
+      paddingLeft: "8px",
       paddingRight: "8px",
     },
   },
   cells: {
     style: {
-      paddingLeft: "8px", 
+      paddingLeft: "8px",
       paddingRight: "8px",
     },
   },
 };
 const columns = [
   {
-    name: "Title",
+    name: "اسم سوال",
 
-    selector: (row) => row.title,
+    selector: (row: { title: any }) => row.title,
   },
   {
-    name: "diff",
-    selector: (row) => row.diff,
+    name: "سختی",
+    selector: (row: { diff: any }) => row.diff,
     conditionalCellStyles: [
       {
-        when: (row) => row.diff == "آسان",
+        when: (row: { diff: string }) => row.diff == "آسان",
         style: {
           color: "rgba(63, 195, 128, 0.9)",
           "&:hover": {
@@ -84,7 +106,7 @@ const columns = [
         },
       },
       {
-        when: (row) => row.diff == "متوسط",
+        when: (row: { diff: string }) => row.diff == "متوسط",
         style: {
           color: "rgba(208, 258, 6, 0.9)",
           "&:hover": {
@@ -93,7 +115,7 @@ const columns = [
         },
       },
       {
-        when: (row) => row.diff == "سخت",
+        when: (row: { diff: string }) => row.diff == "سخت",
         style: {
           color: "rgba(242, 38, 19, 0.9)",
           "&:hover": {
@@ -103,86 +125,19 @@ const columns = [
       },
     ],
   },
-];
-
-const data = [
   {
-    id: 1,
-    title: "سوال یک",
-    diff: "آسان",
-    solved: false,
+    name: "امتیاز",
+    selector: (row: { score: any }) => row.score,
   },
   {
-    id: 2,
-    title: "سوال دو",
-    diff: "متوسط",
-    solved: false,
-  },
-  {
-    id: 3,
-    title: "سوال سه",
-    diff: "سخت",
-    solved: false,
-  },
-  {
-    id: 4,
-    title: "سوال چهار",
-    diff: "متوسط",
-    solved: false,
-  },
-  {
-    id: 5,
-    title: "سوال پنج",
-    diff: "سخت",
-    solved: false,
-  },
-  {
-    id: 6,
-    title: "سوال شش",
-    diff: "سخت",
-    solved: true,
-  },
-  {
-    id: 7,
-    title: "سوال هفت",
-    diff: "سخت",
-    solved: false,
-  },
-  {
-    id: 8,
-    title: "سوال هشت",
-    diff: "سخت",
-    solved: false,
-  },
-  {
-    id: 9,
-    title: "سوال نه",
-    diff: "سخت",
-    solved: false,
-  },
-  {
-    id: 10,
-    title: "سوال ده",
-    diff: "سخت",
-    solved: false,
-  },
-  {
-    id: 11,
-    title: "سوال یازده",
-    diff: "سخت",
-    solved: false,
-  },
-  {
-    id: 12,
-    title: "سوال دوازده",
-    diff: "سخت",
-    solved: true,
+    name: "دسته بندی",
+    selector: (row: { category: any }) => row.category,
   },
 ];
 
 const conditionalRowStyles = [
   {
-    when: (row) => row.solved == true,
+    when: (row: { solved: boolean }) => row.solved == true,
     style: {
       backgroundColor: "#073648",
       color: "white",
@@ -194,7 +149,7 @@ const conditionalRowStyles = [
 ];
 
 const FilterComponent = ({ filterText, onFilter }) => (
-  <>
+  <div>
     <TextField
       id="search"
       type="text"
@@ -218,7 +173,7 @@ const FilterComponent = ({ filterText, onFilter }) => (
         },
       }}
     />
-  </>
+  </div>
 );
 
 const MenuComponent = ({ filterText, onFilter }) => (
@@ -267,8 +222,60 @@ function QuickFilteringGrid() {
   const [filterDifficulty, setFilterDifficulty] = React.useState("");
   const [open, setOpen] = React.useState(false);
   const [selectedTitle, setSelectedTitle] = React.useState("");
-  const [solved , setSolved] = React.useState(false);
-  const filteredItems = data.filter(
+  const [solved, setSolved] = React.useState(false);
+  const [first, setFirst] = React.useState(false);
+  const [rawDatas, setRawDatas] = React.useState<RawDataCell[]>();
+  const [processedData, setProcessedData] = React.useState<
+    DataCell[] | undefined
+  >(undefined);
+
+  const [selectedCell, setSelectedCell] = React.useState<
+    selectedCellType | undefined
+  >(undefined);
+
+  const fetchData = () => {
+    axios
+      .get("http://localhost:8000/api/challenges/")
+      .then(function (response) {
+        console.log(response.data);
+        setRawDatas(response.data);
+        return response.data;
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  const rawDataProcess = (rawDataCells: RawDataCell[]) => {
+    const processedDatas: DataCell[] = rawDataCells.map((cell, index) => {
+      const processedData: DataCell = {
+        id: index,
+        title: cell.title,
+        diff: cell.score < 30 ? "آسان" : cell.score < 60 ? "متوسط" : "سخت",
+        score: cell.score,
+        category: cell.category,
+        solved: false,
+      };
+      return processedData;
+    });
+
+    console.log(processedDatas);
+    setProcessedData(processedDatas);
+
+    return processedDatas;
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+  useEffect(() => {
+    if (rawDatas !== undefined && !first) {
+      setFirst(true);
+
+      rawDataProcess(rawDatas);
+    }
+  }, [rawDatas]);
+  const filteredItems = processedData?.filter(
     (item) =>
       item.title &&
       item.title.includes(filterText) &&
@@ -278,12 +285,26 @@ function QuickFilteringGrid() {
   const handleclose = () => {
     setOpen(false);
   };
-  const handleClick = (row) => {
-    setSelectedTitle(row.title)
-    setSolved(row.solved)
+  const handleClick = (row: {
+    title: React.SetStateAction<string>;
+    solved: boolean | ((prevState: boolean) => boolean);
+  }) => {
+    const id = row.id + 1;
+
+    axios
+      .get(`http://localhost:8000/api/challenges/${id}/`)
+      .then(function (response) {
+        console.log(response.data.category);
+        
+        setSelectedCell(response.data);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    setSelectedTitle(row.title);
+    setSolved(row.solved);
     setOpen((prevOpen) => {
-      
-      return true; 
+      return true;
     });
   };
   const subHeaderComponentMemo = React.useMemo(() => {
@@ -294,20 +315,24 @@ function QuickFilteringGrid() {
     };
 
     return (
-      <>
+      <Box display="flex" flexDirection="row">
         <Box>
           <FilterComponent
-            onFilter={(e) => setFilterText(e.target.value)}
+            onFilter={(e: {
+              target: { value: React.SetStateAction<string> };
+            }) => setFilterText(e.target.value)}
             filterText={filterText}
           />
         </Box>
         <Box ml={"5%"}>
           <MenuComponent
-            onFilter={(e) => setFilterDifficulty(e.target.value)}
+            onFilter={(e: {
+              target: { value: React.SetStateAction<string> };
+            }) => setFilterDifficulty(e.target.value)}
             filterText={filterDifficulty}
           />
         </Box>
-      </>
+      </Box>
     );
   }, [filterText, filterDifficulty]);
 
@@ -320,34 +345,50 @@ function QuickFilteringGrid() {
   };
   return (
     <>
-      <Paper
-        square={false}
-        elevation={10}
-        style={{
-          marginTop: "3%",
-          backgroundColor: "#0F1924",
-          marginRight: "auto",
-          marginLeft: "auto",
-          maxWidth: "80%",
-          borderRadius: "10px",
-          paddingTop: "1%",
-        }}
-      >
-        <DataTable
-          columns={columns}
-          data={filteredItems}
-          customStyles={customStyles}
-          theme="solarized"
-          onRowClicked={handleClick}
-          subHeader
-          subHeaderComponent={subHeaderComponentMemo}
-          persistTableHead
-          pagination
-          paginationComponentOptions={paginationComponentOptions}
-          conditionalRowStyles={conditionalRowStyles}
-        />
-      </Paper>
-      <DialogComponent open={open} handleclose={handleclose} title={selectedTitle} solved={solved}/>
+      {processedData !== undefined && (
+        <>
+          <Paper
+            square={false}
+            elevation={10}
+            style={{
+              marginTop: "3%",
+              backgroundColor: "#0F1924",
+              marginRight: "auto",
+              marginLeft: "auto",
+              maxWidth: "80%",
+              borderRadius: "10px",
+              paddingTop: "1%",
+            }}
+          >
+            <DataTable
+              columns={columns}
+              data={filteredItems}
+              customStyles={customStyles}
+              theme="solarized"
+              onRowClicked={handleClick}
+              subHeader
+              subHeaderComponent={subHeaderComponentMemo}
+              persistTableHead
+              pagination
+              paginationComponentOptions={paginationComponentOptions}
+              conditionalRowStyles={conditionalRowStyles}
+            />
+          </Paper>
+
+          {selectedCell !== undefined && (
+            <DialogComponent
+              open={open}
+              handleclose={handleclose}
+              title={selectedCell?.title}
+              solved={false}
+              score={selectedCell?.score}
+              description={selectedCell?.description}
+              category={selectedCell?.category}
+              hints={selectedCell?.hints}
+            />
+          )}
+        </>
+      )}
     </>
   );
 }
