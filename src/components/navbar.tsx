@@ -18,12 +18,12 @@ import ForumIcon from "@mui/icons-material/Forum";
 import SchoolIcon from "@mui/icons-material/School";
 function Navbar() {
   const containerStyle = {
-    height: "75px", // Set the desired height
+    height: "75px", 
   };
   const imageStyle = {
-    width: "100%", // Set width to fill the container
-    maxHeight: "100%", // Set maxHeight to fit the height
-    objectFit: "contain", // Maintain aspect ratio and cover the entire container
+    width: "100%", 
+    maxHeight: "100%",
+    objectFit: "contain", 
   };
   return (
     <AppBar position="static" sx={{ bgcolor: "#0F1924", borderRadius: "10px" }}>
