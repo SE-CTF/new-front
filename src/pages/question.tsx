@@ -47,7 +47,7 @@ function Question() {
   const boxStyle = {
     flex: 1,
     height: "100px",
-    marginRight: "10px", // Adjust margin as needed
+    marginRight: "10px",
   };
   const handleSubmit = () => {
     console.log(value);
