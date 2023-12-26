@@ -23,7 +23,9 @@ import LoginImg from "../assets/login-img.png";
 import LockIcon from "@mui/icons-material/Lock";
 import { VisibilityOff, Visibility } from "@mui/icons-material";
 import sample_logo from "../assets/sample_logo.png";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
+import axios from "axios";
+import TokenService from "../utils/tokenAccess";
 
 interface FormData {
   email: string;
@@ -33,6 +35,7 @@ interface FormData {
 const SignUpForm = () => {
   const { register, handleSubmit } = useForm();
   const [showPassword, setShowPassword] = React.useState(false);
+  const [isSignedUp, setIsSignedUp] = React.useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
 
@@ -44,6 +47,14 @@ const SignUpForm = () => {
 
   const onSubmit = (data: any) => {
     console.log("Form submitted:", data);
+    axios
+    .post("http://localhost:8000/api/auth/signup", data)
+    .then(function (response) {
+      console.log(response);
+      const token = response.data.access;
+      TokenService.saveToken(token);
+      setIsSignedUp(true)
+    })
   };
   const customInputLabelStyle = {
     color: "#3498db",
@@ -56,6 +67,8 @@ const SignUpForm = () => {
     fontFamily: "vazirmatn",
   };
   return (
+    <>
+    {isSignedUp && <Navigate to="/" replace={true} />}
     <Paper
       square={false}
       elevation={10}
@@ -202,6 +215,7 @@ const SignUpForm = () => {
         </Box>
       </Grid>
     </Paper>
+    </>
   );
 };
 

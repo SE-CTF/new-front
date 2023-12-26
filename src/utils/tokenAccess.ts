@@ -1,5 +1,5 @@
 // tokenService.js
-const TOKEN_KEY = "your-secret-key";
+const TOKEN_KEY = "secret-key";
 
 const TokenService = {
   saveToken: (token: string) => {

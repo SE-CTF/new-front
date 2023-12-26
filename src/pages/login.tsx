@@ -50,10 +50,10 @@ const LoginForm = () => {
   const onSubmit = (data: any) => {
     console.log("Form submitted:", data);
     axios
-      .post("http://localhost:8000/login", data)
+      .post("http://localhost:8000/api/auth/login", data)
       .then(function (response) {
         console.log(response);
-        const token = response.data.access_token;
+        const token = response.data.access;
         TokenService.saveToken(token);
         setIsLoggedIn(true);
       })

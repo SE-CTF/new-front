@@ -16,14 +16,18 @@ import AirlineSeatLegroomExtraIcon from "@mui/icons-material/AirlineSeatLegroomE
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import ForumIcon from "@mui/icons-material/Forum";
 import SchoolIcon from "@mui/icons-material/School";
-function Navbar() {
+import Person2Icon from "@mui/icons-material/Person2";
+interface NavBarProps {
+  isAuthenticated: boolean;
+}
+function Navbar({ isAuthenticated }: NavBarProps) {
   const containerStyle = {
-    height: "75px", 
+    height: "75px",
   };
   const imageStyle = {
-    width: "100%", 
+    width: "100%",
     maxHeight: "100%",
-    objectFit: "contain", 
+    objectFit: "contain",
   };
   return (
     <AppBar position="static" sx={{ bgcolor: "#0F1924", borderRadius: "10px" }}>
@@ -126,8 +130,42 @@ function Navbar() {
           </Grid>
           <Grid item xs={1}></Grid>
           <Grid item xs={4}>
-            <Box style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Link to="/signup">
+            {!isAuthenticated && (
+              <Box style={{ display: "flex", justifyContent: "flex-end" }}>
+                <Link to="/signup">
+                  <Button
+                    sx={{
+                      marginRight: "30px",
+                      "&:focus": {
+                        outline: "none",
+                      },
+                    }}
+                  >
+                    {" "}
+                    <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
+                      ثبت نام
+                    </Typography>
+                  </Button>
+                </Link>
+                <Link to="/login">
+                  <Button
+                    sx={{
+                      marginRight: "30px",
+                      "&:focus": {
+                        outline: "none",
+                      },
+                    }}
+                  >
+                    {" "}
+                    <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
+                      ورود
+                    </Typography>
+                  </Button>
+                </Link>
+              </Box>
+            )}
+            {isAuthenticated && (
+              <Link to="/school">
                 <Button
                   sx={{
                     marginRight: "30px",
@@ -135,29 +173,15 @@ function Navbar() {
                       outline: "none",
                     },
                   }}
+                  startIcon={<Person2Icon />}
                 >
                   {" "}
                   <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
-                    ثبت نام
+                    پروفایل
                   </Typography>
                 </Button>
               </Link>
-              <Link to="/login">
-                <Button
-                  sx={{
-                    marginRight: "30px",
-                    "&:focus": {
-                      outline: "none",
-                    },
-                  }}
-                >
-                  {" "}
-                  <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
-                    ورود
-                  </Typography>
-                </Button>
-              </Link>
-            </Box>
+            )}
           </Grid>
         </Grid>
       </Toolbar>
