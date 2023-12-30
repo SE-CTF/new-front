@@ -31,7 +31,7 @@ const Home = () => {
   const [count, setCount] = useState(0);
   const [isPasswordVisible, setPasswordVisibility] = useState(false);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: { preventDefault: () => void; }) => {
     e.preventDefault();
   };
 
@@ -51,33 +51,27 @@ const Home = () => {
           </Grid>
         </Grid>
 
-        <Grid container spacing={10} style={{ marginBottom: "16px" }}>
-          <Grid item xs={4}></Grid>
-          <Grid item xs={4}>
+        <Grid container spacing={0} style={{ marginBottom: "16px" }}>
+          <Grid item xs={5}></Grid>
+          <Grid item xs={3}>
             <Typography
-              variant="h6"
+              variant="h5"
               style={{
-                fontFamily: "vazirmatn",
-                fontSize: "30px",
-                color: "rgb(209, 223, 227)",
+
                 fontWeight: "bold",
               }}
             >
               آموزش ، یادگیری ، رقابت
             </Typography>
           </Grid>
-          <Grid item xs={2}></Grid>
+          <Grid item xs={4}></Grid>
         </Grid>
 
-        <Grid container spacing={1} className="d-flex">
+        <Grid container>
           <Grid item xs={4}></Grid>
-          <Grid item>
+          <Grid item xs={5}>
             <Typography
-              variant="body2"
               style={{
-                fontFamily: "vazirmatn",
-                fontSize: "10px",
-                color: "rgb(209, 223, 227)",
                 fontWeight: "bold",
               }}
             >
@@ -85,7 +79,6 @@ const Home = () => {
               eiusmod tempor incididunt ut labore et dolore magna aliqua.
             </Typography>
           </Grid>
-          <Grid item xs={4}></Grid>
         </Grid>
 
         <Grid container spacing={10} mt={-5}>

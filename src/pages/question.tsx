@@ -60,7 +60,6 @@ function Question() {
       sx={{ height: 550 }}
       style={{
         marginTop: "3%",
-        backgroundColor: "#0F1924",
         marginRight: "auto",
         marginLeft: "auto",
         maxWidth: "90%",

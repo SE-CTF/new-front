@@ -4,11 +4,10 @@ import {
   Typography,
   Button,
   Grid,
-  Stack,
-  ButtonGroup,
   Box,
+  Hidden,
+  Container,
 } from "@mui/material";
-import { createTheme } from "@mui/material/styles";
 import sample_logo from "../assets/sample_logo.png";
 import { Link } from "react-router-dom";
 import AccessibleForwardIcon from "@mui/icons-material/AccessibleForward";
@@ -16,175 +15,97 @@ import AirlineSeatLegroomExtraIcon from "@mui/icons-material/AirlineSeatLegroomE
 import AssessmentIcon from "@mui/icons-material/Assessment";
 import ForumIcon from "@mui/icons-material/Forum";
 import SchoolIcon from "@mui/icons-material/School";
-import Person2Icon from "@mui/icons-material/Person2";
 import { useAuth } from "../context/AuthContext";
 import CustomizedMenus from "./customMenu";
 import LoginIcon from "@mui/icons-material/Login";
 import AirOutlinedIcon from "@mui/icons-material/AirOutlined";
-function Navbar() {
-  const { user, isUserSignedIn } = useAuth();
-  const containerStyle = {
-    height: "75px",
-  };
-  const imageStyle = {
-    width: "100%",
-    maxHeight: "100%",
-    objectFit: "contain",
-  };
+import NavBarLink from "./navbarlink";
+const Navbar = () => {
+  const { isUserSignedIn } = useAuth();
+  const navLinks = [
+    { link: "/challenges", text: "حق طلبی", icon: <AccessibleForwardIcon /> },
+    { link: "/scores", text: "جدول امتیازات", icon: <AssessmentIcon /> },
+    { link: "#", text: "فروم", icon: <ForumIcon /> },
+    {
+      link: "/Question",
+      text: "طرح سوال",
+      icon: <AirlineSeatLegroomExtraIcon />,
+      show: isUserSignedIn,
+    },
+    { link: "/school", text: "آکادمی", icon: <SchoolIcon /> },
+  ];
   return (
-    <AppBar position="static" sx={{ bgcolor: "#0F1924", borderRadius: "10px" }}>
+    <AppBar position="static" sx={{ borderRadius: "10px" }}>
       <Toolbar>
-        <img src={sample_logo} alt="logo" height="50px" />
-        <Link to="/">
-          <Typography
-            fontFamily={"vazirmatn"}
-            variant="h6"
-            sx={{
-              flexGrow: 1,
-              whiteSpace: "nowrap",
-            }}
-          >
-            سامانه جامع حق طلبان
-          </Typography>
-        </Link>
-        <Grid container spacing={10}>
-          <Grid item xs={isUserSignedIn ? 7 : 6}>
-            <Box style={{ display: "flex", justifyContent: "flex-end" }}>
-              <Link to="/challanges">
-                <Button
-                  sx={{
-                    marginRight: "30px",
-                    "&:focus": {
-                      outline: "none",
-                    },
-                  }}
-                  startIcon={<AccessibleForwardIcon />}
-                >
-                  {" "}
-                  <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
-                    حق طلبی
-                  </Typography>
-                </Button>
-              </Link>
-              <Link to="/Scores">
-                <Button
-                  sx={{
-                    marginRight: "30px",
-                    "&:focus": {
-                      outline: "none",
-                    },
-                  }}
-                  startIcon={<AssessmentIcon />}
-                >
-                  {" "}
-                  <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
-                    جدول امتیازات
-                  </Typography>
-                </Button>
-              </Link>
-              <Button
-                sx={{
-                  marginRight: "30px",
-                  "&:focus": {
-                    outline: "none",
-                  },
-                }}
-                startIcon={<ForumIcon />}
-              >
-                {" "}
-                <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
-                  فروم
-                </Typography>
-              </Button>
-              {isUserSignedIn && (
-                <Link to="/Question">
-                  <Button
-                    sx={{
-                      marginRight: "30px",
-                      "&:focus": {
-                        outline: "none",
-                      },
-                    }}
-                    startIcon={<AirlineSeatLegroomExtraIcon />}
-                  >
-                    {" "}
-                    <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
-                      طرح سوال
-                    </Typography>
-                  </Button>
-                </Link>
-              )}
-              <Link to="/school">
-                <Button
-                  sx={{
-                    marginRight: "30px",
-                    "&:focus": {
-                      outline: "none",
-                    },
-                  }}
-                  startIcon={<SchoolIcon />}
-                >
-                  {" "}
-                  <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
-                    آکادمی
-                  </Typography>
-                </Button>
-              </Link>
-            </Box>
+        <Hidden lgDown>
+          <img src={sample_logo} alt="logo" height="50px" />
+          <Link to="/">
+            <Typography
+              fontFamily={"vazirmatn"}
+              variant="h6"
+              sx={{
+                flexGrow: 1,
+                whiteSpace: "nowrap",
+              }}
+            >
+              سامانه جامع حق طلبان
+            </Typography>
+          </Link>
+        </Hidden>
+        <Hidden mdDown>
+          <Grid container spacing={10}>
+            <Grid item md={isUserSignedIn ? 7 : 6} sm={isUserSignedIn ? 8 : 7}>
+              <Box style={{ display: "flex", justifyContent: "flex-end" }}>
+                {navLinks.map((link, index) => (
+                  <>
+                    {link.show !== false && (
+                      <NavBarLink
+                        link={link.link}
+                        text={link.text}
+                        icon={link.icon}
+                      />
+                    )}
+                  </>
+                ))}
+              </Box>
+            </Grid>
+            {!isUserSignedIn && (
+              <>
+                <Grid item md={isUserSignedIn ? 1 : 2} sm={0}></Grid>
+                <Grid item md={4}>
+                  <Box style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <NavBarLink
+                      link={"/signup"}
+                      text={"ثبت نام"}
+                      icon={<AirOutlinedIcon />}
+                    />
+                    <NavBarLink
+                      link={"/login"}
+                      text={"ورود"}
+                      icon={<LoginIcon />}
+                    />
+                  </Box>
+                </Grid>{" "}
+              </>
+            )}
+            {isUserSignedIn && (
+              <>
+                <Grid item md={3}></Grid>
+                <Grid item md={2}>
+                  <CustomizedMenus />
+                </Grid>
+              </>
+            )}
           </Grid>
-          {!isUserSignedIn && (
-            <>
-              <Grid item xs={isUserSignedIn ? 1 : 2}></Grid>
-              <Grid item xs={4}>
-                <Box style={{ display: "flex", justifyContent: "flex-end" }}>
-                  <Link to="/signup">
-                    <Button
-                      startIcon={<AirOutlinedIcon />}
-                      sx={{
-                        marginRight: "30px",
-                        "&:focus": {
-                          outline: "none",
-                        },
-                      }}
-                    >
-                      {" "}
-                      <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
-                        ثبت نام
-                      </Typography>
-                    </Button>
-                  </Link>
-                  <Link to="/login">
-                    <Button
-                      startIcon={<LoginIcon />}
-                      sx={{
-                        marginRight: "30px",
-                        "&:focus": {
-                          outline: "none",
-                        },
-                      }}
-                    >
-                      {" "}
-                      <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
-                        ورود
-                      </Typography>
-                    </Button>
-                  </Link>
-                </Box>
-              </Grid>{" "}
-            </>
-          )}
-          {isUserSignedIn && (
-            <>
-              <Grid item xs={3}></Grid>
-              <Grid item xs={2}>
-                <CustomizedMenus />
-              </Grid>
-            </>
-          )}
-        </Grid>
+        </Hidden>
+        <Hidden mdUp>
+          <Box sx={{justifyContent: "center" }}>
+            <img src={sample_logo} alt="logo" height="50px" />
+          </Box>
+        </Hidden>
       </Toolbar>
     </AppBar>
   );
-}
+};
 
 export default Navbar;

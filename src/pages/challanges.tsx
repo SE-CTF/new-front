@@ -3,14 +3,16 @@ import DataTable, { createTheme } from "react-data-table-component";
 import DialogComponent from "../components/dialoges";
 import {
   Box,
-  InputLabel,
-  MenuItem,
+  Checkbox,
+  CircularProgress,
+  Grid,
+  Hidden,
   Paper,
-  Select,
+  Rating,
   TextField,
-  Typography,
 } from "@mui/material";
 import axios from "axios";
+import SetDifficultyAndCategoryAccordian from "../components/setdifficultyaccordian";
 
 interface RawDataCell {
   title: string;
@@ -25,6 +27,8 @@ interface DataCell {
   score: number;
   category: string;
   solved: boolean;
+  rating: number;
+  scoreToShow: string;
 }
 interface selectedCellType {
   title: string;
@@ -33,15 +37,17 @@ interface selectedCellType {
   hints: string[];
   category: string;
 }
+
 createTheme(
   "solarized",
   {
     text: {
-      primary: "#268bd2",
+      fontFamily: "vazirmatn",
+      primary: "#FFFFFF",
       secondary: "#2aa198",
     },
     background: {
-      default: "#0F1924",
+      default: "transparent",
     },
     context: {
       background: "#cb4b16",
@@ -61,6 +67,7 @@ createTheme(
 const customStyles = {
   table: {
     style: {
+      fontFamily: "vazirmatn",
       marginRight: "auto",
       marginLeft: "auto",
       maxWidth: "96%",
@@ -127,104 +134,53 @@ const columns = [
   },
   {
     name: "امتیاز",
-    selector: (row: { score: any }) => row.score,
+    selector: (row: { scoreToShow: any }) => row.scoreToShow,
   },
   {
     name: "دسته بندی",
     selector: (row: { category: any }) => row.category,
   },
-];
-
-const conditionalRowStyles = [
   {
-    when: (row: { solved: boolean }) => row.solved == true,
-    style: {
-      backgroundColor: "#073648",
-      color: "white",
-      "&:hover": {
-        cursor: "pointer",
-      },
-    },
+    name: "حل شده",
+    selector: (row: { solved: boolean }) => row.solved,
+    cell: (row: { solved: boolean | undefined; }) => <Checkbox disabled defaultChecked={row.solved} />,
+  },
+  {
+    name: "امتیاز سوال ",
+    selector: (row: { rating: number }) => row.rating,
+    cell: (row: { rating: number | null | undefined; }) => <Rating name="disabled" value={row.rating} disabled />,
   },
 ];
 
 const FilterComponent = ({ filterText, onFilter }) => (
   <div>
     <TextField
+      multiline={false}
       id="search"
       type="text"
       placeholder="فیلتر کردن با اسم"
       label="جست و جو"
       value={filterText}
       onChange={onFilter}
-      color="info"
-      InputLabelProps={{
-        style: {
-          color: "#3498db",
-          fontFamily: "vazirmatn",
-        },
-      }}
+      variant="outlined"
+      fullWidth
       InputProps={{
         style: {
-          color: "#3498db",
-          background: "#2c3e50",
           borderRadius: "8px",
-          fontFamily: "vazirmatn",
         },
       }}
     />
   </div>
 );
-
-const MenuComponent = ({ filterText, onFilter }) => (
-  <>
-    <Select
-      label="سلام"
-      variant="outlined"
-      value={filterText}
-      onChange={onFilter}
-      style={{
-        color: "#3498db",
-        background: "#2c3e50",
-        borderRadius: "8px",
-        fontFamily: "vazirmatn",
-      }}
-      MenuProps={{
-        PaperProps: {
-          style: {
-            background: "#2c3e50",
-            fontFamily: "vazirmatn",
-          },
-        },
-      }}
-    >
-      <MenuItem value="">
-        <em>بدون فیلتر</em>
-      </MenuItem>
-      <MenuItem value={"آسان"}>
-        {" "}
-        <Typography fontFamily={"vazirmatn"}>آسان</Typography>
-      </MenuItem>
-      <MenuItem value={"متوسط"}>
-        {" "}
-        <Typography fontFamily={"vazirmatn"}>متوسط</Typography>
-      </MenuItem>
-      <MenuItem value={"سخت"}>
-        {" "}
-        <Typography fontFamily={"vazirmatn"}>سخت</Typography>
-      </MenuItem>
-    </Select>
-  </>
-);
-
 function QuickFilteringGrid() {
   const [filterText, setFilterText] = React.useState("");
-  const [filterDifficulty, setFilterDifficulty] = React.useState("");
+  const [filterDifficulty, setFilterDifficulty] = React.useState<string[]>([]);
   const [open, setOpen] = React.useState(false);
   const [selectedTitle, setSelectedTitle] = React.useState("");
   const [solved, setSolved] = React.useState(false);
   const [first, setFirst] = React.useState(false);
   const [rawDatas, setRawDatas] = React.useState<RawDataCell[]>();
+  const [sliderValue, setSliderValue] = React.useState<number[]>([0, 100]);
   const [processedData, setProcessedData] = React.useState<
     DataCell[] | undefined
   >(undefined);
@@ -255,7 +211,11 @@ function QuickFilteringGrid() {
         score: cell.score,
         category: cell.category,
         solved: false,
+        rating: 2,
+        scoreToShow: cell.score.toLocaleString("fa-EG"),
       };
+      console.log(processedData);
+
       return processedData;
     });
 
@@ -275,12 +235,18 @@ function QuickFilteringGrid() {
       rawDataProcess(rawDatas);
     }
   }, [rawDatas]);
-  const filteredItems = processedData?.filter(
-    (item) =>
-      item.title &&
-      item.title.includes(filterText) &&
-      item.diff &&
-      item.diff.includes(filterDifficulty)
+  const filteredItems = processedData?.filter((item) =>
+    filterDifficulty.length > 0
+      ? item.title &&
+        item.title.includes(filterText) &&
+        item.diff &&
+        filterDifficulty.includes(item.diff) &&
+        item.score <= sliderValue[1] &&
+        item.score >= sliderValue[0]
+      : item.title &&
+        item.title.includes(filterText) &&
+        item.score <= sliderValue[1] &&
+        item.score >= sliderValue[0]
   );
   const handleclose = () => {
     setOpen(false);
@@ -295,7 +261,7 @@ function QuickFilteringGrid() {
       .get(`http://localhost:8000/api/challenges/${id}/`)
       .then(function (response) {
         console.log(response.data.category);
-        
+
         setSelectedCell(response.data);
       })
       .catch(function (error) {
@@ -307,34 +273,6 @@ function QuickFilteringGrid() {
       return true;
     });
   };
-  const subHeaderComponentMemo = React.useMemo(() => {
-    const handleClear = () => {
-      if (filterText) {
-        setFilterText("");
-      }
-    };
-
-    return (
-      <Box display="flex" flexDirection="row">
-        <Box>
-          <FilterComponent
-            onFilter={(e: {
-              target: { value: React.SetStateAction<string> };
-            }) => setFilterText(e.target.value)}
-            filterText={filterText}
-          />
-        </Box>
-        <Box ml={"5%"}>
-          <MenuComponent
-            onFilter={(e: {
-              target: { value: React.SetStateAction<string> };
-            }) => setFilterDifficulty(e.target.value)}
-            filterText={filterDifficulty}
-          />
-        </Box>
-      </Box>
-    );
-  }, [filterText, filterDifficulty]);
 
   const paginationComponentOptions = {
     noRowsPerPage: true,
@@ -343,38 +281,123 @@ function QuickFilteringGrid() {
     selectAllRowsItem: true,
     selectAllRowsItemText: "همه نتایج",
   };
+
+  const handlDiffChange = (e: { target: { name: string; }; }) => {
+    if (!filterDifficulty.includes(e.target.name)) {
+      setFilterDifficulty((prevFilterDifficulty) => [
+        ...prevFilterDifficulty,
+        e.target.name,
+      ]);
+    } else {
+      setFilterDifficulty((prevFilterDifficulty) =>
+        prevFilterDifficulty.filter((item) => item !== e.target.name)
+      );
+    }
+  };
+
+  const handleSliderChange = (
+    event: Event,
+    newValue: number | number[],
+    activeThumb: number
+  ) => {
+    if (!Array.isArray(newValue)) {
+      return;
+    }
+
+    if (newValue[1] - newValue[0] < 5) {
+      if (activeThumb === 0) {
+        const clamped = Math.min(newValue[0], 100 - 5);
+        setSliderValue([clamped, clamped + 5]);
+      } else {
+        const clamped = Math.max(newValue[1], 5);
+        setSliderValue([clamped - 5, clamped]);
+      }
+    } else {
+      setSliderValue(newValue as number[]);
+    }
+  };
   return (
     <>
-      {processedData !== undefined && (
-        <>
-          <Paper
-            square={false}
-            elevation={10}
-            style={{
-              marginTop: "3%",
-              backgroundColor: "#0F1924",
-              marginRight: "auto",
-              marginLeft: "auto",
-              maxWidth: "80%",
-              borderRadius: "10px",
-              paddingTop: "1%",
-            }}
-          >
-            <DataTable
-              columns={columns}
-              data={filteredItems}
-              customStyles={customStyles}
-              theme="solarized"
-              onRowClicked={handleClick}
-              subHeader
-              subHeaderComponent={subHeaderComponentMemo}
-              persistTableHead
-              pagination
-              paginationComponentOptions={paginationComponentOptions}
-              conditionalRowStyles={conditionalRowStyles}
+      <Grid container>
+        <Hidden smDown>
+          <Grid sm={3} xs={0}>
+            {" "}
+            <SetDifficultyAndCategoryAccordian
+              handleItemChange={handlDiffChange}
+              title={"سختی"}
+              items={["آسان", "متوسط", "سخت"]}
+              isSlider={false}
             />
-          </Paper>
+            <SetDifficultyAndCategoryAccordian
+              handleItemChange={() => {}}
+              title={"دسته بندی"}
+              items={[
+                "Crypto",
+                "Cracking",
+                "Network",
+                "Forensics",
+                "Steganography",
+              ]}
+              isSlider={false}
+            />
+            <SetDifficultyAndCategoryAccordian
+              title={"امتیاز"}
+              isSlider={true}
+              sliderValue={sliderValue}
+              handleSliderChange={handleSliderChange}
+            />
+          </Grid>
+        </Hidden>
+        <Grid sm={9} xs={12}>
+          {processedData !== undefined && (
+            <Paper
+              square={false}
+              elevation={10}
+              style={{
+                marginTop: "3%",
+                marginRight: "auto",
+                marginLeft: "auto",
+                maxWidth: "95%",
+                borderRadius: "10px",
+                paddingTop: "1%",
+              }}
+            >
+              <Box
+                maxWidth={"80%"}
+                justifyContent={"center"}
+                margin={"auto"}
+                bgcolor={"transparent"}
+              >
+                <FilterComponent
+                  onFilter={(e: {
+                    target: { value: React.SetStateAction<string> };
+                  }) => setFilterText(e.target.value)}
+                  filterText={filterText}
+                />
+              </Box>
 
+              <DataTable
+                columns={columns}
+                data={filteredItems}
+                customStyles={customStyles}
+                theme="solarized"
+                onRowClicked={handleClick}
+                persistTableHead
+                pagination
+                paginationComponentOptions={paginationComponentOptions}
+              />
+            </Paper>
+          )}
+          {processedData == undefined && (
+            <Box
+              mt={"20%"}
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+            >
+              <CircularProgress color="primary" size={"10rem"} />
+            </Box>
+          )}
           {selectedCell !== undefined && (
             <DialogComponent
               open={open}
@@ -387,8 +410,8 @@ function QuickFilteringGrid() {
               hints={selectedCell?.hints}
             />
           )}
-        </>
-      )}
+        </Grid>
+      </Grid>
     </>
   );
 }

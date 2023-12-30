@@ -1,31 +1,13 @@
 import DataTable, { createTheme } from "react-data-table-component";
-import { Paper } from "@mui/material";
+import { Paper, useTheme, useMediaQuery } from "@mui/material";
+import solarizedTheme from "../themes/react-component-table-themes";
+import {
+  ReactElement,
+  JSXElementConstructor,
+  ReactNode,
+  ReactPortal,
+} from "react";
 
-createTheme(
-  "solarized",
-  {
-    text: {
-      primary: "#268bd2",
-      secondary: "#2aa198",
-    },
-    background: {
-      default: "#0F1924",
-    },
-    context: {
-      background: "#cb4b16",
-      text: "#FFFFFF",
-    },
-    divider: {
-      default: "#073642",
-    },
-    action: {
-      button: "rgba(0,0,0,.54)",
-      hover: "rgba(0,0,0,.08)",
-      disabled: "rgba(0,0,0,.12)",
-    },
-  },
-  "dark"
-);
 const customStyles = {
   table: {
     style: {
@@ -37,42 +19,22 @@ const customStyles = {
 
   rows: {
     style: {
-      minHeight: "72px", 
+      minHeight: "72px",
     },
   },
   headCells: {
     style: {
-      paddingLeft: "8px", 
+      paddingLeft: "8px",
       paddingRight: "8px",
     },
   },
   cells: {
     style: {
-      paddingLeft: "8px", 
+      paddingLeft: "8px",
       paddingRight: "8px",
     },
   },
 };
-const columns = [
-  {
-    id: 1,
-    name: "رتبه",
-    cell: (row) => <div>{row.id}</div>,
-    width: "10%",
-  },
-  {
-    id: 2,
-    name: "نام",
-    selector: (row) => row.name,
-    width: "80%",
-  },
-  {
-    id:3,
-    name: "امتیاز",
-    selector: (row) => row.score,
-    width: "10%",
-  },
-];
 
 const data = [
   {
@@ -92,13 +54,45 @@ const data = [
   },
 ];
 function Scoreboard() {
-    const paginationComponentOptions = {
-        noRowsPerPage : true,
-        rowsPerPageText: 'نفر در هر صفحه',
-        rangeSeparatorText: 'از',
-        selectAllRowsItem: true,
-        selectAllRowsItemText: 'همه نتایج',
-    };
+  const isMobile = useMediaQuery(useTheme().breakpoints.down("sm"));
+  const isTablet = useMediaQuery(useTheme().breakpoints.down("md"));
+  const columns = [
+    {
+      id: 1,
+      name: "رتبه",
+      cell: (row: {
+        id:
+          | string
+          | number
+          | boolean
+          | ReactElement<any, string | JSXElementConstructor<any>>
+          | Iterable<ReactNode>
+          | ReactPortal
+          | null
+          | undefined;
+      }) => <div>{row.id}</div>,
+      width: isMobile ? "25%" : isTablet ? "20%" : "15%",
+    },
+    {
+      id: 2,
+      name: "نام",
+      selector: (row: { name: string }) => row.name,
+      width: isMobile ? "50%" : isTablet ? "60%" : "70%",
+    },
+    {
+      id: 3,
+      name: "امتیاز",
+      selector: (row: { score: number }) => row.score,
+      width: isMobile ? "25%" : isTablet ? "20%" : "15%",
+    },
+  ];
+  const paginationComponentOptions = {
+    noRowsPerPage: true,
+    rowsPerPageText: "نفر در هر صفحه",
+    rangeSeparatorText: "از",
+    selectAllRowsItem: true,
+    selectAllRowsItemText: "همه نتایج",
+  };
   return (
     <>
       <Paper
@@ -106,7 +100,6 @@ function Scoreboard() {
         elevation={10}
         style={{
           marginTop: "3%",
-          backgroundColor: "#0F1924",
           marginRight: "auto",
           marginLeft: "auto",
           maxWidth: "80%",
@@ -117,7 +110,7 @@ function Scoreboard() {
           columns={columns}
           data={data}
           customStyles={customStyles}
-          theme="solarized"
+          theme={"solarized"}
           defaultSortFieldId={3}
           pagination
           paginationComponentOptions={paginationComponentOptions}

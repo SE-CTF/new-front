@@ -18,6 +18,7 @@ import {
   InputAdornment,
   Snackbar,
   Alert,
+  useMediaQuery,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -29,6 +30,7 @@ import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
 import TokenService from "../utils/tokenAccess";
 import { Credentials, useAuth } from "../context/AuthContext";
+import { useTheme } from '@mui/material/styles';
 
 interface FormData {
   email: string;
@@ -36,6 +38,9 @@ interface FormData {
 }
 
 const SignUpForm = () => {
+  const theme = useTheme();
+  const isMobile = useMediaQuery(useTheme().breakpoints.down('sm'));
+  const isTablet = useMediaQuery(useTheme().breakpoints.down('md'));
   const { register, handleSubmit } = useForm();
   const [showPassword, setShowPassword] = React.useState(false);
   const [isSignedUp, setIsSignedUp] = React.useState(false);
@@ -104,13 +109,12 @@ const SignUpForm = () => {
       <Paper
         square={false}
         elevation={10}
-        sx={{ m: 1, height: 600 }}
+        sx={{ m: 1, height: "80vh" }}
         style={{
-          marginTop: "3%",
-          backgroundColor: "#0F1924",
+          marginTop: "5vh",
           marginRight: "auto",
           marginLeft: "auto",
-          maxWidth: "30%",
+          maxWidth: isMobile?"90vw":isTablet?"50vw":"30vw",
           borderRadius: "10px",
         }}
       >
@@ -127,7 +131,7 @@ const SignUpForm = () => {
             </Avatar>
           </Box>
         </Grid> */}
-          <Grid item xs={2}>
+          <Grid item lg={2} xs={12}>
             <Box
               display="flex"
               justifyContent="center"

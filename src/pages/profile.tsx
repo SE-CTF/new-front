@@ -22,7 +22,6 @@ const Profile = () => {
         sx={{ m: 1, height: 600 }}
         style={{
           marginTop: "3%",
-          backgroundColor: "#0F1924",
           marginRight: "auto",
           marginLeft: "auto",
           maxWidth: "80%",

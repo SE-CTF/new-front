@@ -44,7 +44,7 @@ function DialogComponent({
   description,
   score,
   category,
-  hints
+  hints,
 }: DialogProps) {
   const StyledMarkdown = styled("div")({
     fontFamily: "vazirmatn",
@@ -68,7 +68,7 @@ function DialogComponent({
     fontFamily: "vazirmatn",
   };
   console.log(category);
-  
+
   return (
     <>
       <Dialog
@@ -76,11 +76,6 @@ function DialogComponent({
         maxWidth={"md"}
         open={open}
         onClose={handleclose}
-        PaperProps={{
-          style: {
-            backgroundColor: "#0F1924",
-          },
-        }}
       >
         <DialogTitle>
           <Grid container spacing={2} justifyContent="space-between">
@@ -107,7 +102,7 @@ function DialogComponent({
               <DialogContentText>
                 {" "}
                 <Typography fontFamily={"vazirmatn"} color="white" variant="h6">
-                   دسته بندی:{category}
+                  دسته بندی:{category}
                 </Typography>
               </DialogContentText>
               <br />
