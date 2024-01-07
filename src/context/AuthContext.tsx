@@ -10,6 +10,8 @@ interface AuthContextType {
   signOut: () => void;
   checkUserSignInStatus : () => void;
   getUser : () => void;
+  mode : string;
+  changeMode :() => void;
 }
 
 interface User {
@@ -25,6 +27,7 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export const AuthProvider = ({ children }) => {
   const [isUserSignedIn, setIsUserSignedIn] = useState(false);
   const [user, setUser] = useState<User | null>(null);
+  const [mode , setMode] = useState<string>("dark");
 
   const signIn = (credentials: Credentials, token: string) => {
     const newUser: User = {
@@ -35,6 +38,10 @@ export const AuthProvider = ({ children }) => {
     setIsUserSignedIn(true);
   };
 
+  const changeMode=() =>
+  {
+    setMode(mode=="dark"?"light":"dark")
+  }
 
   const signOut = () => {
     TokenService.removeToken();
@@ -56,7 +63,9 @@ export const AuthProvider = ({ children }) => {
     signIn,
     signOut,
     checkUserSignInStatus,
-    getUser
+    getUser,
+    mode,
+    changeMode
   };
 
   return (

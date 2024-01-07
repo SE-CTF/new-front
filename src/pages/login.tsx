@@ -71,12 +71,9 @@ const LoginForm = () => {
       });
   };
   const customInputLabelStyle = {
-    color: "#3498db",
     fontFamily: "vazirmatn",
   };
   const customInputInputProps = {
-    color: "#3498db",
-    background: "#2c3e50",
     borderRadius: "8px",
     fontFamily: "vazirmatn",
   };
@@ -112,18 +109,6 @@ const LoginForm = () => {
         }}
       >
         <Grid justifyContent="center" alignItems="center">
-          {/* <Grid item>
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            paddingTop={"5%"}
-          >
-            <Avatar style={{ backgroundColor: "#1bbd7e" }}>
-              <LockIcon />
-            </Avatar>
-          </Box>
-        </Grid> */}
           <Grid item xs={2}>
             <Box
               display="flex"
@@ -140,7 +125,7 @@ const LoginForm = () => {
               />
             </Box>
             <Box display="flex" justifyContent="center" alignItems="center">
-              <Typography fontFamily={"vazirmatn"} variant="h3" color={"white"}>
+              <Typography  variant="h3">
                 {" "}
                 ورود
               </Typography>

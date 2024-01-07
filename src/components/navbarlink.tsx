@@ -1,6 +1,7 @@
 import { Button, Typography } from "@mui/material";
 import { ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
 
 interface NavBarLinkProps {
   link: string;
@@ -9,11 +10,13 @@ interface NavBarLinkProps {
 }
 
 const NavBarLink = ({ link, text, icon }: NavBarLinkProps) => {
+  const { isUserSignedIn , changeMode, mode } = useAuth();
   return (
     <>
       <Link to={link}>
         <Button
           sx={{
+            color : mode == "dark" ? "primary" : "white",
             marginRight: "30px",
             "&:focus": {
               outline: "none",
@@ -22,7 +25,7 @@ const NavBarLink = ({ link, text, icon }: NavBarLinkProps) => {
           startIcon={icon}
         >
           {" "}
-          <Typography fontFamily={"vazirmatn"} variant="body1">
+          <Typography variant="body1">
             {text}{" "}
           </Typography>
         </Button>

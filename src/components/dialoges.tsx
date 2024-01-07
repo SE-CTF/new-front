@@ -81,7 +81,7 @@ function DialogComponent({
           <Grid container spacing={2} justifyContent="space-between">
             <Grid item>
               {" "}
-              <Typography fontFamily={"vazirmatn"} color="white" variant="h5">
+              <Typography  variant="h5">
                 {title}
               </Typography>
             </Grid>
@@ -101,20 +101,20 @@ function DialogComponent({
             <Grid item xs={10}>
               <DialogContentText>
                 {" "}
-                <Typography fontFamily={"vazirmatn"} color="white" variant="h6">
+                <Typography  variant="h6">
                   دسته بندی:{category}
                 </Typography>
               </DialogContentText>
               <br />
               <DialogContentText>
                 {" "}
-                <Typography fontFamily={"vazirmatn"} color="white" variant="h6">
+                <Typography  variant="h6">
                   توضیحات:
                 </Typography>
               </DialogContentText>
               <DialogContentText>
                 <StyledMarkdown>
-                  <ReactMarkdown remarkPlugins={[gfm]}>
+                  <ReactMarkdown  remarkPlugins={[gfm]}>
                     {description}
                   </ReactMarkdown>
                 </StyledMarkdown>
@@ -135,21 +135,9 @@ function DialogComponent({
                 <TextField
                   {...register("flag")}
                   disabled={solved || !isUserSignedIn}
-                  InputLabelProps={{
-                    style: customInputLabelStyle,
-                  }}
-                  InputProps={{
-                    style: customInputInputProps,
-                  }}
-                  autoFocus
                   fullWidth
                   variant="outlined"
-                  style={{
-                    margin: "auto",
-                    display: "block",
-                    minWidth: "50%",
-                    maxWidth: "80%",
-                  }}
+ 
                 />
               </Grid>
               <Grid item xs={2}>

@@ -1,136 +1,154 @@
 import React, { useState } from "react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import {
-  Container,
-  Card,
-  CardContent,
   Typography,
-  TextField,
   Button,
   Grid,
-  Hidden,
   Box,
   Paper,
-  Avatar,
-  Checkbox,
-  FormControlLabel,
-  IconButton,
-  InputAdornment,
-  Snackbar,
-  Alert,
   useMediaQuery,
 } from "@mui/material";
-import VisibilityIcon from "@mui/icons-material/Visibility";
-import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
-import LoginImg from "../assets/login-img.png";
-import LockIcon from "@mui/icons-material/Lock";
-import { VisibilityOff, Visibility } from "@mui/icons-material";
 import sample_logo from "../assets/sample_logo.png";
 import { Link, Navigate } from "react-router-dom";
 import axios from "axios";
-import TokenService from "../utils/tokenAccess";
 import { Credentials, useAuth } from "../context/AuthContext";
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
+import CustomTextField from "../components/customtextfield";
+import TopAlert from "../components/topalert";
+import { z, ZodError } from "zod";
 
 interface FormData {
+  username: string;
   email: string;
   password: string;
 }
 
+interface Errors {
+  usernameError: string;
+  passwordError: string;
+  emailError: string;
+}
+
+const formDataSchema = z.object({
+  username: z.string().min(5),
+  email: z.string().email(),
+  password: z.string().min(8),
+});
+
 const SignUpForm = () => {
-  const theme = useTheme();
-  const isMobile = useMediaQuery(useTheme().breakpoints.down('sm'));
-  const isTablet = useMediaQuery(useTheme().breakpoints.down('md'));
-  const { register, handleSubmit } = useForm();
-  const [showPassword, setShowPassword] = React.useState(false);
+  const isMobile = useMediaQuery(useTheme().breakpoints.down("sm"));
+  const isTablet = useMediaQuery(useTheme().breakpoints.down("md"));
+  const { register, handleSubmit } = useForm<FormData>();
+  const [alertText, setAlertText] = React.useState("");
   const [isSignedUp, setIsSignedUp] = React.useState(false);
   const { signIn } = useAuth();
-  const [open, setOpen] = useState(false);
+  const [alertOpen, setAlertOpen] = useState(false);
+  const [errors, setErrors] = useState<Errors>({
+    usernameError: "",
+    passwordError: "",
+    emailError: "",
+  });
 
-  const handleClickShowPassword = () => setShowPassword((show) => !show);
+  const handleAlert = (alertText: string, alertOpen: boolean) => {
+    setAlertText((prevAlertText) => {
+      return alertText;
+    });
+    setAlertOpen((prevOpen) => {
+      return alertOpen;
+    });
+  };
 
-  const handleMouseDownPassword = (
-    event: React.MouseEvent<HTMLButtonElement>
-  ) => {
-    event.preventDefault();
+  const initialErrors = {
+    usernameError: "",
+    passwordError: "",
+    emailError: "",
+  };
+
+  const resetErrors = () => {
+    setErrors(initialErrors);
+  };
+  const updateError = (propertyName: string, newValue: string) => {
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [propertyName]: newValue,
+    }));
   };
 
   const onSubmit = (data: any) => {
+    resetErrors();
     console.log("Form submitted:", data);
-    axios
-      .post("http://localhost:8000/api/auth/signup/", data)
-      .then(function (response) {
-        console.log(response);
-        const token = response.data.access;
-        const credentials: Credentials = {
-          email: response.data.email,
-        };
-        signIn(credentials, token);
-        setIsSignedUp(true);
-      })
-      .catch(function (error) {
-        console.log(error);
-        setOpen(true);
-      });
-  };
-  const customInputLabelStyle = {
-    color: "#3498db",
-    fontFamily: "vazirmatn",
-  };
-  const customInputInputProps = {
-    color: "#3498db",
-    background: "#2c3e50",
-    borderRadius: "8px",
-    fontFamily: "vazirmatn",
-  };
-  const handleClick = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
+    try {
+      const validatedData = formDataSchema.parse(data);
+      console.log("Form data is valid:", validatedData);
+      axios
+        .post("http://localhost:8000/api/auth/signup/", data)
+        .then(function (response) {
+          console.log(response);
+          const token = response.data.access;
+          const credentials: Credentials = {
+            email: response.data.email,
+          };
+          signIn(credentials, token);
+          setIsSignedUp(true);
+        })
+        .catch(function (error) {
+          console.log(error);
+          if (error.response.status == 406) {
+            console.log("sasasa");
+          } else {
+            handleAlert("این ایمیل یا نام کاربری قبلا ثبت شده است.",true)
+          }
+        });
+    } catch (error) {
+      if (error instanceof ZodError) {
+        console.error("Form data validation failed:", error.errors);
+        error.errors.forEach(
+          (validationError: { code: string; path: any[]; message: any }) => {
+            if (
+              validationError.path[0] == "password" &&
+              validationError.code == "too_small"
+            ) {
+              updateError("passwordError", "رمز عبور حداقل باید ۸ حرف باشد.");
+            }
+            if (
+              validationError.path[0] == "username" &&
+              validationError.code == "too_small"
+            ) {
+              updateError("usernameError", "نام کاربری حداقل باید ۵ حرف باشد");
+            }
+            if (validationError.path[0] == "email") {
+              updateError("emailError", "ایمیل باید به فرمت درست باشد.");
+            }
+          }
+        );
+      } else {
+        console.error("An unexpected error occurred during validation:", error);
+      }
+    }
   };
   return (
     <>
       {isSignedUp && <Navigate to="/" replace={true} />}
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleClose}
-      >
-        <Alert severity="error">
-          <Typography fontFamily={"vazirmatn"}>
-            {" "}
-            ایمیل یا نام کاربری تکراری میباشد
-          </Typography>
-        </Alert>
-      </Snackbar>
+      <TopAlert
+        open={alertOpen}
+        setOpen={setAlertOpen}
+        text={alertText}
+        severity={"error"}
+      />
       <Paper
         square={false}
         elevation={10}
-        sx={{ m: 1, height: "80vh" }}
-        style={{
+        sx={{
+          m: 1,
+          height: "85vh",
           marginTop: "5vh",
           marginRight: "auto",
           marginLeft: "auto",
-          maxWidth: isMobile?"90vw":isTablet?"50vw":"30vw",
+          maxWidth: isMobile ? "90vw" : isTablet ? "50vw" : "30vw",
           borderRadius: "10px",
         }}
       >
         <Grid justifyContent="center" alignItems="center">
-          {/* <Grid item>
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            paddingTop={"5%"}
-          >
-            <Avatar style={{ backgroundColor: "#1bbd7e" }}>
-              <LockIcon />
-            </Avatar>
-          </Box>
-        </Grid> */}
           <Grid item lg={2} xs={12}>
             <Box
               display="flex"
@@ -147,75 +165,53 @@ const SignUpForm = () => {
               />
             </Box>
             <Box display="flex" justifyContent="center" alignItems="center">
-              <Typography fontFamily={"vazirmatn"} variant="h3" color={"white"}>
-                {" "}
-                ثبت نام
-              </Typography>
+              <Typography variant="h3"> ثبت نام</Typography>
             </Box>
           </Grid>
 
           <form onSubmit={handleSubmit(onSubmit)}>
             <Box justifyContent="center" alignItems="center" m={"5%"} mt={"5%"}>
-              <TextField
-                {...register("username", { required: true })}
-                id="username"
-                InputLabelProps={{
-                  style: customInputLabelStyle,
-                }}
-                InputProps={{
-                  style: customInputInputProps,
-                }}
-                label="نام کاربری"
-                type="text"
-                placeholder="نام کاربری خود را وارد کنید"
-                fullWidth
-                required
-              />
+              <CustomTextField
+                multilline={false}
+                id={"username"}
+                type={"text"}
+                placeholder={" نام کاربری خود را وارد کنید"}
+                label={"نام کاربری"}
+                variant={"outlined"}
+                register={register}
+                name={"username"}
+                fullWidth={true}
+                helperText={errors.usernameError}
+              ></CustomTextField>
             </Box>
             <Box justifyContent="center" alignItems="center" m={"5%"} mt={"5%"}>
-              <TextField
-                {...register("email", { required: true, minLength: 8 })}
-                id="email"
-                InputLabelProps={{
-                  style: customInputLabelStyle,
-                }}
-                InputProps={{
-                  style: customInputInputProps,
-                }}
-                label="ایمیل"
-                type="email"
-                placeholder="ایمیل خود را وارد کنید"
-                fullWidth
-                required
-              />
+              <CustomTextField
+                multilline={false}
+                id={"email"}
+                type={"text"}
+                placeholder={"ایمیل خود را وارد کنید"}
+                label={"ایمیل"}
+                variant={"outlined"}
+                register={register}
+                name={"email"}
+                fullWidth={true}
+                helperText={errors.emailError}
+              ></CustomTextField>
             </Box>
             <Box justifyContent="center" alignItems="center" m={"5%"} mt={"5%"}>
-              <TextField
-                {...register("password", { required: true, minLength: 8 })}
-                InputLabelProps={{
-                  style: customInputLabelStyle,
-                }}
-                InputProps={{
-                  style: customInputInputProps,
-                  endAdornment: (
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="toggle password visibility"
-                        onClick={handleClickShowPassword}
-                        onMouseDown={handleMouseDownPassword}
-                        edge="end"
-                      >
-                        {showPassword ? <VisibilityOff /> : <Visibility />}
-                      </IconButton>
-                    </InputAdornment>
-                  ),
-                }}
-                label="رمز عبور"
-                placeholder="رمز عبور خود را وارد کنید."
-                type={showPassword ? "text" : "password"}
-                fullWidth
-                required
-              />
+              <CustomTextField
+                multilline={false}
+                id={"password"}
+                type={"password"}
+                placeholder={"رمز عبور خود را وارد کنید."}
+                label={"رمز عبور"}
+                variant={"outlined"}
+                register={register}
+                name={"password"}
+                fullWidth={true}
+                isPassword={true}
+                helperText={errors.passwordError}
+              ></CustomTextField>
             </Box>
             <Box
               justifyContent="center"

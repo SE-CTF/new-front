@@ -13,6 +13,8 @@ import {
 } from "@mui/material";
 import axios from "axios";
 import SetDifficultyAndCategoryAccordian from "../components/setdifficultyaccordian";
+import { useAuth } from "../context/AuthContext";
+import CustomTextField from "../components/customtextfield";
 
 interface RawDataCell {
   title: string;
@@ -38,32 +40,6 @@ interface selectedCellType {
   category: string;
 }
 
-createTheme(
-  "solarized",
-  {
-    text: {
-      fontFamily: "vazirmatn",
-      primary: "#FFFFFF",
-      secondary: "#2aa198",
-    },
-    background: {
-      default: "transparent",
-    },
-    context: {
-      background: "#cb4b16",
-      text: "#FFFFFF",
-    },
-    divider: {
-      default: "#073642",
-    },
-    action: {
-      button: "rgba(0,0,0,.54)",
-      hover: "rgba(0,0,0,.08)",
-      disabled: "rgba(0,0,0,.12)",
-    },
-  },
-  "dark"
-);
 const customStyles = {
   table: {
     style: {
@@ -143,12 +119,16 @@ const columns = [
   {
     name: "حل شده",
     selector: (row: { solved: boolean }) => row.solved,
-    cell: (row: { solved: boolean | undefined; }) => <Checkbox disabled defaultChecked={row.solved} />,
+    cell: (row: { solved: boolean | undefined }) => (
+      <Checkbox disabled defaultChecked={row.solved} />
+    ),
   },
   {
     name: "امتیاز سوال ",
     selector: (row: { rating: number }) => row.rating,
-    cell: (row: { rating: number | null | undefined; }) => <Rating name="disabled" value={row.rating} disabled />,
+    cell: (row: { rating: number | null | undefined }) => (
+      <Rating name="disabled" value={row.rating} disabled />
+    ),
   },
 ];
 
@@ -180,6 +160,7 @@ function QuickFilteringGrid() {
   const [solved, setSolved] = React.useState(false);
   const [first, setFirst] = React.useState(false);
   const [rawDatas, setRawDatas] = React.useState<RawDataCell[]>();
+  const { mode } = useAuth();
   const [sliderValue, setSliderValue] = React.useState<number[]>([0, 100]);
   const [processedData, setProcessedData] = React.useState<
     DataCell[] | undefined
@@ -188,7 +169,58 @@ function QuickFilteringGrid() {
   const [selectedCell, setSelectedCell] = React.useState<
     selectedCellType | undefined
   >(undefined);
-
+  createTheme(
+    "solarized",
+    {
+      text: {
+        fontFamily: "vazirmatn",
+        primary: "white",
+        secondary: "#2aa198",
+      },
+      background: {
+        default: "transparent",
+      },
+      context: {
+        background: "#cb4b16",
+        text: "primary",
+      },
+      divider: {
+        default: "#073642",
+      },
+      action: {
+        button: "rgba(0,0,0,.54)",
+        hover: "rgba(0,0,0,.08)",
+        disabled: "rgba(0,0,0,.12)",
+      },
+    },
+    "dark"
+  );
+  createTheme(
+    "solarized_light",
+    {
+      text: {
+        fontFamily: "vazirmatn",
+        primary: "black",
+        secondary: "#2aa198",
+      },
+      background: {
+        default: "transparent",
+      },
+      context: {
+        background: "#cb4b16",
+        text: "primary",
+      },
+      divider: {
+        default: "#073642",
+      },
+      action: {
+        button: "rgba(0,0,0,.54)",
+        hover: "rgba(0,0,0,.08)",
+        disabled: "rgba(0,0,0,.12)",
+      },
+    },
+    "light"
+  );
   const fetchData = () => {
     axios
       .get("http://localhost:8000/api/challenges/")
@@ -282,7 +314,7 @@ function QuickFilteringGrid() {
     selectAllRowsItemText: "همه نتایج",
   };
 
-  const handlDiffChange = (e: { target: { name: string; }; }) => {
+  const handlDiffChange = (e: { target: { name: string } }) => {
     if (!filterDifficulty.includes(e.target.name)) {
       setFilterDifficulty((prevFilterDifficulty) => [
         ...prevFilterDifficulty,
@@ -380,7 +412,7 @@ function QuickFilteringGrid() {
                 columns={columns}
                 data={filteredItems}
                 customStyles={customStyles}
-                theme="solarized"
+                theme={mode == "dark" ? "solarized" : "solarized_light"}
                 onRowClicked={handleClick}
                 persistTableHead
                 pagination
