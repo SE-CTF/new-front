@@ -16,6 +16,7 @@ import { useLocation } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { blueGrey, deepOrange } from "@mui/material/colors";
 import { CssBaseline } from "@mui/material";
+import { useAuth } from "./context/AuthContext";
 const darkTheme = createTheme({
   typography: {
     fontFamily: 'vazirmatn, sans-serif',
@@ -33,11 +34,23 @@ const darkTheme = createTheme({
       paper: "rgb(0,0,0)",
     },
   },
+  
+});
+
+const lightTheme = createTheme({
+  typography: {
+    fontFamily: 'vazirmatn, sans-serif',
+  },
+  palette: {
+    mode: "light",
+  },
+  
 });
 function App() {
+  const { mode } = useAuth();
   return (
     <>
-      <ThemeProvider theme={darkTheme}>
+      <ThemeProvider theme={ mode == "dark" ?darkTheme : lightTheme}>
         <CssBaseline />
         <Navbar />
         <Routes>

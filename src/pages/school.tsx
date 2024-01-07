@@ -16,7 +16,6 @@ const CostomBoxLink = ({link , title} : CostomBoxLinkProps) => {
             target="_blank"
             rel="noopener noreferrer"
             underline="hover"
-            color={"white"}
           >
             {title}
           </Link>
@@ -42,7 +41,7 @@ const School = () => {
         }}
       >
         <Box justifyContent={"center"} pt={"10%"} pl={"8%"}>
-          <Typography fontFamily={"vazirmatn"} variant="h4" color={"white"}>
+          <Typography fontFamily={"vazirmatn"} variant="h4">
             منابع خارجی:
           </Typography>
         </Box>
