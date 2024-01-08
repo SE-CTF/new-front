@@ -14,7 +14,7 @@ import axios from "axios";
 import { Credentials, useAuth } from "../context/AuthContext";
 import { useTheme } from "@mui/material/styles";
 import CustomTextField from "../components/customtextfield";
-import TopAlert from "../components/topalert";
+import CustomAlert from "../components/alert";
 import { z, ZodError } from "zod";
 
 interface FormData {
@@ -96,7 +96,7 @@ const SignUpForm = () => {
           if (error.response.status == 406) {
             console.log("sasasa");
           } else {
-            handleAlert("این ایمیل یا نام کاربری قبلا ثبت شده است.",true)
+            handleAlert("این ایمیل یا نام کاربری قبلا ثبت شده است.", true);
           }
         });
     } catch (error) {
@@ -129,11 +129,13 @@ const SignUpForm = () => {
   return (
     <>
       {isSignedUp && <Navigate to="/" replace={true} />}
-      <TopAlert
+      <CustomAlert
         open={alertOpen}
         setOpen={setAlertOpen}
         text={alertText}
         severity={"error"}
+        vertical={"top"}
+        horizontal={"center"}
       />
       <Paper
         square={false}

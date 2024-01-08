@@ -5,16 +5,18 @@ interface TopAlertProps {
   open: boolean;
   setOpen: any;
   text: string;
-  severity: "error";
+  severity: "error" | "warning" | "info" | "success";
+  vertical : "top" | "bottom";
+  horizontal : "left" | "center" | "right";
 }
-const TopAlert = ({ open, setOpen, text, severity }: TopAlertProps) => {
+const CustomAlert = ({ open, setOpen, text, severity , vertical , horizontal }: TopAlertProps) => {
   const handleClose = () => {
     setOpen(false);
   };
   return (
     <>
       <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "center" }}
+        anchorOrigin={{ vertical, horizontal}}
         open={open}
         autoHideDuration={4000}
         onClose={handleClose}
@@ -27,4 +29,4 @@ const TopAlert = ({ open, setOpen, text, severity }: TopAlertProps) => {
   );
 };
 
-export default TopAlert;
+export default CustomAlert;

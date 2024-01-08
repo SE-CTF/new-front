@@ -1,6 +1,6 @@
 import { VisibilityOff, Visibility } from "@mui/icons-material";
 import { IconButton, InputAdornment, TextField } from "@mui/material";
-import React from "react";
+import React, { ReactElement } from "react";
 
 interface CustomTextFieldProps {
   multilline: boolean;
@@ -17,7 +17,9 @@ interface CustomTextFieldProps {
   validationRules?: any;
   required?: boolean;
   isPassword?: boolean;
-  helperText?:string;
+  helperText?: string;
+  icon?: ReactElement;
+  disabled?: boolean;
 }
 
 const CustomTextField = ({
@@ -35,7 +37,9 @@ const CustomTextField = ({
   validationRules,
   required,
   isPassword,
-  helperText
+  helperText,
+  icon,
+  disabled,
 }: CustomTextFieldProps) => {
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -50,7 +54,7 @@ const CustomTextField = ({
       <TextField
         {...register(name, validationRules)}
         helperText={helperText}
-        error = {(helperText == "" || helperText==undefined) ? false : true}
+        error={helperText == "" || helperText == undefined ? false : true}
         multiline={multilline}
         id={id}
         type={!isPassword ? type : showPassword ? "text" : "password"}
@@ -61,10 +65,15 @@ const CustomTextField = ({
         variant={variant}
         fullWidth={fullWidth}
         required={required}
+        disabled={disabled == undefined ? false : disabled}
         InputProps={{
           style: {
             borderRadius: "8px",
           },
+          startAdornment:
+            icon == undefined ? null : (
+              <InputAdornment position="start">{icon}</InputAdornment>
+            ),
           endAdornment: !isPassword ? null : (
             <InputAdornment position="end">
               <IconButton

@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, { createContext, useContext, useEffect, useLayoutEffect, useState } from "react";
 import tokenAccess from "../utils/tokenAccess";
 import { token } from "stylis";
 import TokenService from "../utils/tokenAccess";
@@ -22,12 +22,25 @@ export interface Credentials {
   email: string;
 }
 
+
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }) => {
-  const [isUserSignedIn, setIsUserSignedIn] = useState(false);
+  const [isUserSignedIn, setIsUserSignedIn] = useState<boolean>();
   const [user, setUser] = useState<User | null>(null);
   const [mode , setMode] = useState<string>("dark");
+
+  useLayoutEffect(() => {
+    if (TokenService.getToken() !== null ) {
+      const newUser: User = {
+        email: tokenAccess.decodeToken()
+      };
+      TokenService.saveToken(TokenService.getToken());
+      setUser(newUser);
+      setIsUserSignedIn(true);
+    }
+
+  },[])
 
   const signIn = (credentials: Credentials, token: string) => {
     const newUser: User = {

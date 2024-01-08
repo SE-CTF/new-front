@@ -2,11 +2,9 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  Button,
   Grid,
   Box,
   Hidden,
-  Container,
   IconButton,
 } from "@mui/material";
 import sample_logo from "../assets/sample_logo.png";
@@ -19,7 +17,6 @@ import SchoolIcon from "@mui/icons-material/School";
 import { useAuth } from "../context/AuthContext";
 import CustomizedMenus from "./customMenu";
 import LoginIcon from "@mui/icons-material/Login";
-import AirOutlinedIcon from "@mui/icons-material/AirOutlined";
 import LightModeIcon from "@mui/icons-material/LightMode";
 import NavBarLink from "./navbarlink";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
@@ -30,12 +27,12 @@ const Navbar = () => {
     { link: "/challenges", text: "حق طلبی", icon: <AccessibleForwardIcon /> },
     { link: "/scores", text: "جدول امتیازات", icon: <AssessmentIcon /> },
     { link: "#", text: "فروم", icon: <ForumIcon /> },
-    {
-      link: "/Question",
-      text: "طرح سوال",
-      icon: <AirlineSeatLegroomExtraIcon />,
-      show: isUserSignedIn,
-    },
+    // {
+    //   link: "/Question",
+    //   text: "طرح سوال",
+    //   icon: <AirlineSeatLegroomExtraIcon />,
+    //   show: isUserSignedIn,
+    // },
     { link: "/school", text: "آکادمی", icon: <SchoolIcon /> },
   ];
   return (

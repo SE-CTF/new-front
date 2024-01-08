@@ -1,16 +1,14 @@
-const TOKEN_KEY = "django-insecure-on0o@ckw6blrw^une2u%lqix7c&$32gn$oz-##@82f_u40af2z";
-
 const TokenService = {
   saveToken: (token: string) => {
-    localStorage.setItem(TOKEN_KEY, token);
+    localStorage.setItem("key", token);
   },
 
   getToken: () => {
-    return localStorage.getItem(TOKEN_KEY);
+    return localStorage.getItem("key");
   },
 
   removeToken: () => {
-    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem("key");
   },
 
   isTokenExpired: () => {

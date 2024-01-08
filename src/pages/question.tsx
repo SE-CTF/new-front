@@ -13,6 +13,7 @@ import {
   TextField,
   Typography,
 } from "@mui/material";
+import CustomButton from "../components/custombutton";
 const mkdStr = `
 # !!!بزگترین جامعه حق طلبان 
 
@@ -140,7 +141,7 @@ function Question() {
           style={{ backgroundColor: "#67b26f" }}
           variant="contained"
         >
-          <Typography fontFamily="vazirmatn">طرح سوال</Typography>
+          <Typography>طرح سوال</Typography>
         </Button>
       </Box>
     </Paper>
