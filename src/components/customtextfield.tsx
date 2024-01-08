@@ -3,7 +3,7 @@ import { IconButton, InputAdornment, TextField } from "@mui/material";
 import React, { ReactElement } from "react";
 
 interface CustomTextFieldProps {
-  multilline: boolean;
+  multilline?: boolean;
   id: string;
   type: "text" | "email" | "password";
   placeholder: string;
@@ -52,10 +52,12 @@ const CustomTextField = ({
   return (
     <>
       <TextField
-        {...register(name, validationRules)}
+        {...(register !== undefined
+          ? { ...register(name, validationRules) }
+          : {})}
         helperText={helperText}
         error={helperText == "" || helperText == undefined ? false : true}
-        multiline={multilline}
+        multiline={multilline == undefined ? false : multilline}
         id={id}
         type={!isPassword ? type : showPassword ? "text" : "password"}
         placeholder={placeholder}

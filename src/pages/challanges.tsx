@@ -3,6 +3,7 @@ import DataTable, { createTheme } from "react-data-table-component";
 import DialogComponent from "../components/dialoges";
 import {
   Box,
+  Button,
   Checkbox,
   CircularProgress,
   Grid,
@@ -15,8 +16,11 @@ import {
 import axios from "axios";
 import SetDifficultyAndCategoryAccordian from "../components/setdifficultyaccordian";
 import { useAuth } from "../context/AuthContext";
-import { useTheme } from '@mui/material/styles';
+import { useTheme } from "@mui/material/styles";
+import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import CustomTextField from "../components/customtextfield";
+import FilterDialog from "../components/filterdialog";
+import SearchIcon from "@mui/icons-material/Search";
 
 interface RawDataCell {
   title: string;
@@ -136,21 +140,16 @@ const columns = [
 
 const FilterComponent = ({ filterText, onFilter }) => (
   <div>
-    <TextField
-      multiline={false}
-      id="search"
-      type="text"
-      placeholder="فیلتر کردن با اسم"
-      label="جست و جو"
+    <CustomTextField
+      id={"search"}
+      type={"text"}
+      placeholder={"فیلتر کردن با اسم"}
+      label={"جست و جو"}
+      variant={"outlined"}
+      fullWidth={true}
       value={filterText}
       onChange={onFilter}
-      variant="outlined"
-      fullWidth
-      InputProps={{
-        style: {
-          borderRadius: "8px",
-        },
-      }}
+      icon={<SearchIcon />}
     />
   </div>
 );
@@ -158,6 +157,7 @@ function QuickFilteringGrid() {
   const [filterText, setFilterText] = React.useState("");
   const [filterDifficulty, setFilterDifficulty] = React.useState<string[]>([]);
   const [open, setOpen] = React.useState(false);
+  const [filterDialogOpen, setFilterDialogOpen] = React.useState(false);
   const [selectedTitle, setSelectedTitle] = React.useState("");
   const [solved, setSolved] = React.useState(false);
   const [first, setFirst] = React.useState(false);
@@ -165,8 +165,11 @@ function QuickFilteringGrid() {
   const { mode } = useAuth();
   const [sliderValue, setSliderValue] = React.useState<number[]>([0, 100]);
   const [rowId, setRowId] = React.useState<number>(0);
+
   const theme = useTheme();
-  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
+  const isMobile = useMediaQuery(useTheme().breakpoints.down("sm"));
+  const isTablet = useMediaQuery(useTheme().breakpoints.down("md"));
+  const fullScreen = useMediaQuery(theme.breakpoints.down("md"));
   const [processedData, setProcessedData] = React.useState<
     DataCell[] | undefined
   >(undefined);
@@ -288,6 +291,9 @@ function QuickFilteringGrid() {
   const handleclose = () => {
     setOpen(false);
   };
+  const handleFilterDialogClose = () => {
+    setFilterDialogOpen(false);
+  };
   const handleClick = (row: {
     title: React.SetStateAction<string>;
     solved: boolean | ((prevState: boolean) => boolean);
@@ -306,7 +312,7 @@ function QuickFilteringGrid() {
       });
     setSelectedTitle(row.title);
     setSolved(row.solved);
-    setRowId(id)
+    setRowId(id);
     setOpen((prevOpen) => {
       return true;
     });
@@ -401,10 +407,11 @@ function QuickFilteringGrid() {
               }}
             >
               <Box
-                maxWidth={"80%"}
+                maxWidth={!isMobile ? "85%" : "100%"}
                 justifyContent={"center"}
                 margin={"auto"}
                 bgcolor={"transparent"}
+                p={"2% 3%"}
               >
                 <FilterComponent
                   onFilter={(e: {
@@ -413,6 +420,27 @@ function QuickFilteringGrid() {
                   filterText={filterText}
                 />
               </Box>
+              <Hidden smUp>
+                <Box
+                  maxWidth={"100%"}
+                  p={"3%"}
+                  justifyContent={"center"}
+                  margin={"auto"}
+                >
+                  <Button
+                    variant="contained"
+                    elevation={300}
+                    style={{ background: "transparent", color: "inherit" }}
+                    fullWidth
+                    startIcon={<FilterAltIcon />}
+                    onClick={() => {
+                      setFilterDialogOpen(true);
+                    }}
+                  >
+                    فیلترها
+                  </Button>
+                </Box>
+              </Hidden>
 
               <DataTable
                 columns={columns}
@@ -450,6 +478,14 @@ function QuickFilteringGrid() {
               fullScreen={fullScreen}
             />
           )}
+          <FilterDialog
+            open={filterDialogOpen}
+            handleclose={handleFilterDialogClose}
+            handlDiffChange={handlDiffChange}
+            handleCategory={() => {}}
+            sliderValue={sliderValue}
+            handleSliderChange={handleSliderChange}
+          ></FilterDialog>
         </Grid>
       </Grid>
     </>
