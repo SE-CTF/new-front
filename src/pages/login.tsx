@@ -55,7 +55,7 @@ const LoginForm = () => {
   const onSubmit = (data: any) => {
     console.log("Form submitted:", data);
     axios
-      .post("http://127.0.0.1:8000/api/auth/login", data)
+      .post("http://127.0.0.1:8000/api/auth/login/", data)
       .then(function (response) {
         console.log(response);
         const token = response.data.access;

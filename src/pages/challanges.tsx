@@ -10,10 +10,12 @@ import {
   Paper,
   Rating,
   TextField,
+  useMediaQuery,
 } from "@mui/material";
 import axios from "axios";
 import SetDifficultyAndCategoryAccordian from "../components/setdifficultyaccordian";
 import { useAuth } from "../context/AuthContext";
+import { useTheme } from '@mui/material/styles';
 import CustomTextField from "../components/customtextfield";
 
 interface RawDataCell {
@@ -162,6 +164,9 @@ function QuickFilteringGrid() {
   const [rawDatas, setRawDatas] = React.useState<RawDataCell[]>();
   const { mode } = useAuth();
   const [sliderValue, setSliderValue] = React.useState<number[]>([0, 100]);
+  const [rowId, setRowId] = React.useState<number>(0);
+  const theme = useTheme();
+  const fullScreen = useMediaQuery(theme.breakpoints.down('md'));
   const [processedData, setProcessedData] = React.useState<
     DataCell[] | undefined
   >(undefined);
@@ -292,7 +297,7 @@ function QuickFilteringGrid() {
     axios
       .get(`http://localhost:8000/api/challenges/${id}/`)
       .then(function (response) {
-        console.log(response.data.category);
+        console.log(response.data);
 
         setSelectedCell(response.data);
       })
@@ -301,6 +306,7 @@ function QuickFilteringGrid() {
       });
     setSelectedTitle(row.title);
     setSolved(row.solved);
+    setRowId(id)
     setOpen((prevOpen) => {
       return true;
     });
@@ -440,6 +446,8 @@ function QuickFilteringGrid() {
               description={selectedCell?.description}
               category={selectedCell?.category}
               hints={selectedCell?.hints}
+              id={rowId}
+              fullScreen={fullScreen}
             />
           )}
         </Grid>

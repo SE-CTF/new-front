@@ -23,7 +23,16 @@ export default function BasicPopover({ hint, id }: PopoverProps) {
 
   return (
     <div>
-      <IconButton style={{ color: '#5efce8', border : "none"}} aria-describedby={id} onClick={handleClick}>
+      <IconButton
+        sx={{
+          "&:focus": {
+            outline: "none",
+          },
+        }}
+        style={{ color: "primary", border: "none" }}
+        aria-describedby={id}
+        onClick={handleClick}
+      >
         <PriorityHighIcon />
       </IconButton>
       <Popover
