@@ -4,17 +4,12 @@ import {
   DialogTitle,
   DialogContent,
   DialogContentText,
-  TextField,
-  Button,
   IconButton,
   Typography,
   Grid,
   styled,
   Divider,
-  Icon,
   Box,
-  useMediaQuery,
-  useTheme,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import React from "react";
@@ -30,7 +25,6 @@ import PersonIcon from "@mui/icons-material/Person";
 import CustomTextField from "./customtextfield";
 import FlagIcon from "@mui/icons-material/Flag";
 import CustomButton from "./custombutton";
-import { AlignHorizontalCenter } from "@mui/icons-material";
 interface DialogProps {
   open: boolean;
   handleclose: () => void;
@@ -67,8 +61,6 @@ function DialogComponent({
 
   const [alertText, setAlertText] = React.useState("");
   const [alertOpen, setAlertOpen] = useState(false);
-  const isMobile = useMediaQuery(useTheme().breakpoints.down("sm"));
-  const isTablet = useMediaQuery(useTheme().breakpoints.down("md"));
   const [alertSeverity, setAlertSeverity] = useState<
     "error" | "warning" | "info" | "success"
   >("info");
@@ -78,13 +70,13 @@ function DialogComponent({
     alertOpen: boolean,
     alertSeverity: string
   ) => {
-    setAlertText((prevAlertText) => {
+    setAlertText(() => {
       return alertText;
     });
-    setAlertSeverity((prevAlertSeverity) => {
+    setAlertSeverity(() => {
       return alertSeverity;
     });
-    setAlertOpen((prevOpen) => {
+    setAlertOpen(() => {
       return alertOpen;
     });
   };
@@ -235,7 +227,7 @@ function DialogComponent({
                     height: "100%",
                   }}
                 >
-                  <CustomButton buttonText={"ثبت"} type={"submit"} />
+                  <CustomButton buttonText={"ثبت"} type={"submit"}  disabled={!isUserSignedIn}/>
                 </div>
               </Grid>
             </Grid>
