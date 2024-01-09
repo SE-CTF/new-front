@@ -7,9 +7,10 @@ interface NavBarLinkProps {
   link: string;
   text: string;
   icon: ReactNode;
+  isRightMargin? : boolean;
 }
 
-const NavBarLink = ({ link, text, icon }: NavBarLinkProps) => {
+const NavBarLink = ({ link, text, icon,isRightMargin }: NavBarLinkProps) => {
   const { isUserSignedIn , changeMode, mode } = useAuth();
   return (
     <>
@@ -17,7 +18,7 @@ const NavBarLink = ({ link, text, icon }: NavBarLinkProps) => {
         <Button
           sx={{
             color : mode == "dark" ? "primary" : "white",
-            marginRight: "30px",
+            marginRight: (isRightMargin === undefined || isRightMargin)?"30px" : "0px",
             "&:focus": {
               outline: "none",
             },

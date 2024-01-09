@@ -11,8 +11,12 @@ import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import LogoutIcon from "@mui/icons-material/Logout";
 import Person2Icon from "@mui/icons-material/Person2";
 import { Typography } from "@mui/material";
-import {  useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import { Navigate } from "react-router-dom";
+
+interface CustomizedMenusProps {
+  isRightMargin?: boolean;
+}
 
 const StyledMenu = styled((props: MenuProps) => (
   <Menu
@@ -27,15 +31,16 @@ const StyledMenu = styled((props: MenuProps) => (
     }}
     {...props}
   />
-))(({ theme }) => ({
+))(({ theme }) => ({}));
 
-}));
-
-export default function CustomizedMenus() {
+export default function CustomizedMenus({
+  isRightMargin,
+}: CustomizedMenusProps) {
   const { signOut } = useAuth();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [isLoggedOut , setIsLoggedOut] = React.useState(false)
+  const [isLoggedOut, setIsLoggedOut] = React.useState(false);
   const open = Boolean(anchorEl);
+  const { mode } = useAuth();
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
   };
@@ -49,7 +54,9 @@ export default function CustomizedMenus() {
       <Button
         onClick={handleClick}
         sx={{
-          marginRight: "30px",
+          color: mode == "dark" ? "primary" : "white",
+          marginRight:
+            isRightMargin === undefined || isRightMargin ? "30px" : "0px",
           "&:focus": {
             outline: "none",
           },
@@ -57,9 +64,7 @@ export default function CustomizedMenus() {
         startIcon={<Person2Icon />}
       >
         {" "}
-        <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
-          پروفایل
-        </Typography>
+        <Typography fontSize={"15px"}>پروفایل</Typography>
       </Button>
 
       <StyledMenu
@@ -73,24 +78,19 @@ export default function CustomizedMenus() {
       >
         <MenuItem onClick={handleClose} disableRipple>
           <AccountCircleIcon />
-          <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
-            پروفایل
-          </Typography>
+          <Typography fontSize={"15px"}>پروفایل</Typography>
         </MenuItem>
         <Divider sx={{ my: 0.5 }} />
         <MenuItem
           onClick={() => {
             setAnchorEl(null);
-            signOut()
-            setIsLoggedOut(true)
-            
+            signOut();
+            setIsLoggedOut(true);
           }}
           disableRipple
         >
           <LogoutIcon />
-          <Typography fontFamily={"vazirmatn"} fontSize={"15px"}>
-            خروج
-          </Typography>
+          <Typography fontSize={"15px"}>خروج</Typography>
         </MenuItem>
       </StyledMenu>
     </>
