@@ -18,13 +18,22 @@ import { useAuth } from "../context/AuthContext";
 import CustomizedMenus from "./customMenu";
 import LoginIcon from "@mui/icons-material/Login";
 import LightModeIcon from "@mui/icons-material/LightMode";
-import NavBarLink from "./navbarlink";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
+import NavBarLink from "./navbarlink";
 import MenuIcon from "@mui/icons-material/Menu";
+import { useContext, useState } from "react";
+import CustomNavbarDrawer from "./customnavbardrawer";
+import QuizIcon from "@mui/icons-material/Quiz";
 const Navbar = () => {
+  const [drawerOpen, setDrawerOpen] = useState(false);
   const { isUserSignedIn, changeMode, mode } = useAuth();
+  const handleDrawerClose = () => {
+    console.log(drawerOpen);
+
+    setDrawerOpen(false);
+  };
   const navLinks = [
-    { link: "/challenges", text: "حق طلبی", icon: <AccessibleForwardIcon /> },
+    { link: "/challenges", text: "حق طلبی", icon: <QuizIcon /> },
     { link: "/scores", text: "جدول امتیازات", icon: <AssessmentIcon /> },
     { link: "#", text: "فروم", icon: <ForumIcon /> },
     // {
@@ -36,50 +45,58 @@ const Navbar = () => {
     { link: "/school", text: "آکادمی", icon: <SchoolIcon /> },
   ];
   return (
-    <AppBar elevation={5} position="static" sx={{ borderRadius: "5px" }}>
-      <Toolbar>
-        <Hidden lgDown>
-          <img src={sample_logo} alt="logo" height="50px" />
-          <Link to="/">
-            <Typography
-              variant="h6"
-              sx={{
-                color: mode == "dark" ? "primary" : "white",
-                flexGrow: 1,
-                whiteSpace: "nowrap",
-              }}
-            >
-              سامانه جامع حق طلبان
-            </Typography>
-          </Link>
-        </Hidden>
-        <Hidden mdDown>
-          <Grid container spacing={10}>
-            <Grid item md={isUserSignedIn ? 7 : 6} sm={isUserSignedIn ? 8 : 7}>
-              <Box style={{ display: "flex", justifyContent: "flex-end" }}>
-                {navLinks.map((link, index) => (
-                  <>
-                    {link.show !== false && (
-                      <NavBarLink
-                        link={link.link}
-                        text={link.text}
-                        icon={link.icon}
-                      />
-                    )}
-                  </>
-                ))}
-              </Box>
-            </Grid>
-            {!isUserSignedIn && (
+    <>
+      <CustomNavbarDrawer
+        open={drawerOpen}
+        onClose={handleDrawerClose}
+        navLinks={navLinks}
+      />
+      <AppBar elevation={5} position="static" sx={{ borderRadius: "5px" }}>
+        <Toolbar>
+          <Hidden lgDown>
+            <img src={sample_logo} alt="logo" height="50px" />
+            <Link to="/">
+              <Typography
+                variant="h6"
+                sx={{
+                  color: mode == "dark" ? "primary" : "white",
+                  flexGrow: 1,
+                  whiteSpace: "nowrap",
+                }}
+              >
+                سامانه جامع حق طلبان
+              </Typography>
+            </Link>
+          </Hidden>
+          <Hidden mdDown>
+            <Grid container spacing={10}>
+              <Grid item md={7} sm={isUserSignedIn ? 8 : 7}>
+                <Box style={{ display: "flex", justifyContent: "center" }}>
+                  {navLinks.map((link, index) => (
+                    <>
+                      {link.show !== false && (
+                        <NavBarLink
+                          link={link.link}
+                          text={link.text}
+                          icon={link.icon}
+                        />
+                      )}
+                    </>
+                  ))}
+                </Box>
+              </Grid>
               <>
-                <Grid item md={isUserSignedIn ? 1 : 2} sm={0}></Grid>
+                <Grid item md={1} sm={0}></Grid>
                 <Grid item md={4}>
                   <Box style={{ display: "flex", justifyContent: "flex-end" }}>
-                    <NavBarLink
-                      link={"/login"}
-                      text={"ورود/ثبت‌نام"}
-                      icon={<LoginIcon />}
-                    />
+                    {!isUserSignedIn && (
+                      <NavBarLink
+                        link={"/login"}
+                        text={"ورود/ثبت‌نام"}
+                        icon={<LoginIcon />}
+                      />
+                    )}
+                    {isUserSignedIn && <CustomizedMenus />}
                     <Grid md={1}>
                       <IconButton
                         sx={{
@@ -95,49 +112,62 @@ const Navbar = () => {
                   </Box>
                 </Grid>{" "}
               </>
-            )}
-            {isUserSignedIn && (
-              <>
-                <Grid item md={2}></Grid>
-                <Grid item md={2}>
-                  <CustomizedMenus />
-                </Grid>
-              </>
-            )}
-          </Grid>
-        </Hidden>
-        <Hidden mdUp>
-          <IconButton
-            size="large"
-            edge="start"
-            color="inherit"
-            aria-label="menu"
-            sx={{ mr: 2 }}
-          >
-            <MenuIcon />
-          </IconButton>
-          <Box margin={"auto"} sx={{ justifyContent: "center" }}>
-            <img src={sample_logo} alt="logo" height="50px" />
-          </Box>
-          <Link to={""}>
-            <Box display={"inline"}>
+            </Grid>
+          </Hidden>
+          <Hidden mdUp>
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "flex-start",
+              }}
+            >
               <IconButton
                 size="large"
-                edge="end"
+                edge="start"
                 color="inherit"
-                aria-label="login"
+                aria-label="menu"
                 sx={{
                   mr: 2,
+                  "&:focus": {
+                    outline: "none",
+                  },
                 }}
+                onClick={() => setDrawerOpen(true)}
               >
-                <LoginIcon />
+                <MenuIcon />
               </IconButton>
-              <Typography variant="body1">{"ورود"} </Typography>
             </Box>
-          </Link>
-        </Hidden>
-      </Toolbar>
-    </AppBar>
+
+            <Box
+              margin={"auto"}
+              sx={{ width: "100%", display: "flex", justifyContent: "center" }}
+            >
+              <Link to={"/"}>
+                <img src={sample_logo} alt="logo" height="50px" />
+              </Link>
+            </Box>
+            <Box
+              sx={{
+                width: "100%",
+                display: "flex",
+                justifyContent: "flex-end",
+              }}
+            >
+              {!isUserSignedIn && (
+                <NavBarLink
+                  link={"/login"}
+                  text={"ورود/ثبت‌نام"}
+                  icon={<LoginIcon />}
+                  isRightMargin={false}
+                />
+              )}
+              {isUserSignedIn && <CustomizedMenus isRightMargin={false} />}
+            </Box>
+          </Hidden>
+        </Toolbar>
+      </AppBar>
+    </>
   );
 };
 
