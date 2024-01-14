@@ -46,7 +46,7 @@ const lightTheme = createTheme({
   },
   
 });
-function App() {
+const App=() =>{
   const { mode } = useAuth();
   return (
     <>
