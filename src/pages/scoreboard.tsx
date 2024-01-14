@@ -7,6 +7,60 @@ import {
   ReactNode,
   ReactPortal,
 } from "react";
+import { useAuth } from "../context/AuthContext";
+
+createTheme(
+  "solarized",
+  {
+    text: {
+      fontFamily: "vazirmatn",
+      primary: "white",
+      secondary: "#2aa198",
+    },
+    background: {
+      default: "transparent",
+    },
+    context: {
+      background: "#cb4b16",
+      text: "primary",
+    },
+    divider: {
+      default: "#073642",
+    },
+    action: {
+      button: "rgba(0,0,0,.54)",
+      hover: "rgba(0,0,0,.08)",
+      disabled: "rgba(0,0,0,.12)",
+    },
+  },
+  "dark"
+);
+createTheme(
+  "solarized_light",
+  {
+    text: {
+      fontFamily: "vazirmatn",
+      primary: "black",
+      secondary: "#2aa198",
+    },
+    background: {
+      default: "transparent",
+    },
+    context: {
+      background: "#cb4b16",
+      text: "primary",
+    },
+    divider: {
+      default: "#073642",
+    },
+    action: {
+      button: "rgba(0,0,0,.54)",
+      hover: "rgba(0,0,0,.08)",
+      disabled: "rgba(0,0,0,.12)",
+    },
+  },
+  "light"
+);
 
 const customStyles = {
   table: {
@@ -56,6 +110,7 @@ const data = [
 function Scoreboard() {
   const isMobile = useMediaQuery(useTheme().breakpoints.down("sm"));
   const isTablet = useMediaQuery(useTheme().breakpoints.down("md"));
+  const { mode } = useAuth();
   const columns = [
     {
       id: 1,
@@ -102,7 +157,7 @@ function Scoreboard() {
           marginTop: "3%",
           marginRight: "auto",
           marginLeft: "auto",
-          maxWidth: "80%",
+          maxWidth: isMobile ? "95vw" : isTablet ? "85vw" : "80vw",
           borderRadius: "10px",
         }}
       >
@@ -110,7 +165,7 @@ function Scoreboard() {
           columns={columns}
           data={data}
           customStyles={customStyles}
-          theme={"solarized"}
+          theme={mode == "dark" ? "solarized" : "solarized_light"}
           defaultSortFieldId={3}
           pagination
           paginationComponentOptions={paginationComponentOptions}

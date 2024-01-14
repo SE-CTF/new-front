@@ -241,11 +241,11 @@ const SignUpForm = () => {
             mr={"20%"}
           >
             <Typography fontFamily={"vazirmatn"}>ثبت نام کرده اید؟ </Typography>
-            <Link to="/login">
-              <Typography color={"white"} fontFamily={"vazirmatn"}>
-                ورود
-              </Typography>
-            </Link>
+            <Box ml={"3%"}>
+              <Link to="/login">
+                <Typography>ورود</Typography>
+              </Link>
+            </Box>
           </Box>
         </Grid>
       </Paper>

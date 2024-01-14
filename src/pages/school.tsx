@@ -1,12 +1,12 @@
-import { Box, Link, Paper, Typography } from "@mui/material";
+import { Box, Link, Paper, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { title } from "@uiw/react-md-editor";
 
-interface CostomBoxLinkProps  {
-  link : string;
-  title : string;
+interface CostomBoxLinkProps {
+  link: string;
+  title: string;
 }
 
-const CostomBoxLink = ({link , title} : CostomBoxLinkProps) => {
+const CostomBoxLink = ({ link, title }: CostomBoxLinkProps) => {
   return (
     <>
       <Box justifyContent={"center"} mt={"3%"} pl={"20%"}>
@@ -26,6 +26,8 @@ const CostomBoxLink = ({link , title} : CostomBoxLinkProps) => {
 };
 
 const School = () => {
+  const isMobile = useMediaQuery(useTheme().breakpoints.down("sm"));
+  const isTablet = useMediaQuery(useTheme().breakpoints.down("md"));
   return (
     <>
       <Paper
@@ -36,7 +38,7 @@ const School = () => {
           marginTop: "3%",
           marginRight: "auto",
           marginLeft: "auto",
-          maxWidth: "40%",
+          maxWidth: isMobile ? "90vw" : isTablet ? "65vw" : "40vw",
           borderRadius: "10px",
         }}
       >
@@ -45,11 +47,26 @@ const School = () => {
             منابع خارجی:
           </Typography>
         </Box>
-        < CostomBoxLink link={"https://trailofbits.github.io/ctf/"} title="ctf چیست؟"></CostomBoxLink>
-        < CostomBoxLink link={"https://trailofbits.github.io/ctf/"} title="ctf چیست؟"></CostomBoxLink>
-        < CostomBoxLink link={"https://trailofbits.github.io/ctf/"} title="ctf چیست؟"></CostomBoxLink>
-        < CostomBoxLink link={"https://trailofbits.github.io/ctf/"} title="ctf چیست؟"></CostomBoxLink>
-        < CostomBoxLink link={"https://trailofbits.github.io/ctf/"} title="ctf چیست؟"></CostomBoxLink>
+        <CostomBoxLink
+          link={"https://trailofbits.github.io/ctf/"}
+          title="ctf چیست؟"
+        ></CostomBoxLink>
+        <CostomBoxLink
+          link={"https://trailofbits.github.io/ctf/"}
+          title="ctf چیست؟"
+        ></CostomBoxLink>
+        <CostomBoxLink
+          link={"https://trailofbits.github.io/ctf/"}
+          title="ctf چیست؟"
+        ></CostomBoxLink>
+        <CostomBoxLink
+          link={"https://trailofbits.github.io/ctf/"}
+          title="ctf چیست؟"
+        ></CostomBoxLink>
+        <CostomBoxLink
+          link={"https://trailofbits.github.io/ctf/"}
+          title="ctf چیست؟"
+        ></CostomBoxLink>
       </Paper>
     </>
   );
