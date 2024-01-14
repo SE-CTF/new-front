@@ -17,9 +17,10 @@ import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { blueGrey, deepOrange } from "@mui/material/colors";
 import { CssBaseline } from "@mui/material";
 import { useAuth } from "./context/AuthContext";
+import HideOnScroll from "./components/hideOnscroll";
 const darkTheme = createTheme({
   typography: {
-    fontFamily: 'vazirmatn, sans-serif',
+    fontFamily: "vazirmatn, sans-serif",
   },
   palette: {
     mode: "dark",
@@ -34,23 +35,21 @@ const darkTheme = createTheme({
       paper: "rgb(0,0,0)",
     },
   },
-  
 });
 
 const lightTheme = createTheme({
   typography: {
-    fontFamily: 'vazirmatn, sans-serif',
+    fontFamily: "vazirmatn, sans-serif",
   },
   palette: {
     mode: "light",
   },
-  
 });
-const App=() =>{
+const App = () => {
   const { mode } = useAuth();
   return (
     <>
-      <ThemeProvider theme={ mode == "dark" ?darkTheme : lightTheme}>
+      <ThemeProvider theme={mode == "dark" ? darkTheme : lightTheme}>
         <CssBaseline />
         <Navbar />
         <Routes>
@@ -67,12 +66,6 @@ const App=() =>{
       {""}
     </>
   );
-}
+};
 
 export default App;
-function useLayoutEffect(
-  arg0: () => void,
-  arg1: import("react-router-dom").Location<any>[]
-) {
-  throw new Error("Function not implemented.");
-}
