@@ -1,4 +1,3 @@
-import React, { useRef, useState } from "react";
 import {
   Container,
   Typography,
@@ -6,151 +5,106 @@ import {
   CardContent,
   CardMedia,
   Grid,
-  Button,
   Box,
-  createTheme,
-  ThemeProvider,
   CardActionArea,
+  Hidden,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import learn from "../assets/learn.png";
 import learn2 from "../assets/learn2.jpg";
 import learning_community from "../assets/learning_community.png";
 import sample_logo from "../assets/sample_logo.png";
-import reactLogo from "./assets/react.svg";
-import { Routes, Route } from "react-router-dom";
-
-const darkTheme = createTheme({
-  palette: {
-    mode: "dark",
-  },
-});
+import FirstPageCustomCard from "../components/firstPageCustomCard";
 
 const Home = () => {
-  //   const history = useHistory();
-  const formRef = useRef(null);
-  const [count, setCount] = useState(0);
-  const [isPasswordVisible, setPasswordVisibility] = useState(false);
-
-  const handleSubmit = (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
-  };
-
+  const isMobile = useMediaQuery(useTheme().breakpoints.down("sm"));
+  const isTablet = useMediaQuery(useTheme().breakpoints.down("md"));
+  const isNotMobile = useMediaQuery(useTheme().breakpoints.up("sm"));
   return (
     <>
       <Container>
-        <Grid container spacing={0} mt={-4}>
-          <Grid item xs={4}></Grid>
-          <Grid item xs={2}>
-            <img
-              src={sample_logo}
-              alt="Logo"
-              className="mx-auto"
-              height="300"
-              style={{ maxWidth: "500px" }}
-            />
-          </Grid>
-        </Grid>
-
-        <Grid container spacing={0} style={{ marginBottom: "16px" }}>
-          <Grid item xs={5}></Grid>
-          <Grid item xs={3}>
-            <Typography
-              variant="h5"
-              style={{
-
-                fontWeight: "bold",
-              }}
-            >
-              آموزش ، یادگیری ، رقابت
-            </Typography>
-          </Grid>
-          <Grid item xs={4}></Grid>
-        </Grid>
-
-        <Grid container>
-          <Grid item xs={4}></Grid>
-          <Grid item xs={5}>
-            <Typography
-              style={{
-                fontWeight: "bold",
-              }}
-            >
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-              eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            </Typography>
-          </Grid>
-        </Grid>
-
-        <Grid container spacing={10} mt={-5}>
-          <Grid item xs={4}>
-            <Card sx={{ maxWidth: 345 }}>
-              <CardActionArea>
-                <CardMedia
-                  component="img"
-                  height="140"
-                  src={learn}
-                  alt="Learn"
-                />
-                <CardContent>
-                  <Typography gutterBottom variant="h5" component="div">
-                    آموزش
-                  </Typography>
-                  <Typography
-                    variant="subtitle1"
-                    style={{ fontSize: "15px" }}
-                    className="custom-text"
-                  >
-                    Lorem ipsum dolor sit amet, consectetur
-                  </Typography>
-                </CardContent>
-              </CardActionArea>
-            </Card>
-          </Grid>
-          <Grid item xs={4}>
-            <Card className="mx-auto" sx={{ maxWidth: 345 }}>
-              <CardMedia
-                height="140"
-                component="img"
-                src={learn2}
-                alt="Learn 2"
+        <Box display="flex" alignItems="center" justifyContent="center">
+          <img
+            src={sample_logo}
+            alt="Logo"
+            height={isMobile ? "200" : isTablet ? "250" : "350"}
+          />
+        </Box>
+        <Box display="flex" alignItems="center" justifyContent="center">
+          <Typography
+            variant="h4"
+            component="div"
+            align="center"
+            style={{ maxWidth: isMobile ? "100%" : isTablet ? "85%" : "70%" }}
+          >
+            آموزش ، یادگیری ، رقابت
+          </Typography>
+        </Box>
+        <Box
+          mt={isMobile ? "10%" : isTablet ? "5%" : "3%"}
+          display="flex"
+          alignItems="center"
+          justifyContent="center"
+        >
+          <Typography
+            variant="body1"
+            component="div"
+            align="center"
+            style={{ maxWidth: isMobile ? "100%" : isTablet ? "85%" : "70%" }}
+          >
+            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
+            استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در
+            ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و
+            کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی
+            در شصت و سه درصد گذشته، حال و آینده شناخ
+          </Typography>
+        </Box>
+        <Box mt={isTablet ? "20%" : "7%"} mb={"10%"}>
+          <Grid
+            container
+            spacing={isTablet ? 6 : 10}
+            alignItems="center"
+            justifyContent={"center"}
+          >
+            <Grid item xs={12} sm={6} md={4}>
+              <FirstPageCustomCard
+                cardTitle={"آموزش"}
+                cardText={
+                  "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت"
+                }
+                cardImageSource={learn}
+                cardImageAlt={"learn"}
+                isNotMobile={isNotMobile}
+                link={"/school"}
               />
-              <CardContent>
-                <Typography variant="h6" className="custom-text">
-                  یادگیری
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  style={{ fontSize: "15px" }}
-                  className="custom-text"
-                >
-                  Lorem ipsum dolor sit amet, consectetur
-                </Typography>
-              </CardContent>
-            </Card>
-          </Grid>
-          <Grid item xs={4}>
-            <Card className="mx-auto" sx={{ maxWidth: 345 }}>
-              <CardMedia
-                height="140"
-                component="img"
-                src={learning_community}
-                alt="Learning Community"
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <FirstPageCustomCard
+                cardTitle={"یادگیری"}
+                cardText={
+                  "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت"
+                }
+                cardImageSource={learn2}
+                cardImageAlt={"learn2"}
+                isNotMobile={isNotMobile}
+                link={"/challenges"}
               />
-              <CardContent>
-                <Typography variant="h6" className="custom-text">
-                  رقابت
-                </Typography>
-                <Typography
-                  variant="subtitle1"
-                  style={{ fontSize: "15px" }}
-                  className="custom-text"
-                >
-                  Lorem ipsum dolor sit amet, consectetur
-                </Typography>
-              </CardContent>
-            </Card>
+            </Grid>
+            <Grid item xs={12} sm={6} md={4}>
+              <FirstPageCustomCard
+                cardTitle={"رقابت"}
+                cardText={
+                  "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت"
+                }
+                cardImageSource={learning_community}
+                cardImageAlt={"learning_community"}
+                isNotMobile={isNotMobile}
+                link={"/Scores"}
+              />
+            </Grid>
           </Grid>
-        </Grid>
+        </Box>
       </Container>
     </>
   );
