@@ -39,7 +39,7 @@ const Navbar = () => {
   const navLinks = [
     { link: "/challenges", text: "حق طلبی", icon: <QuizIcon /> },
     { link: "/scores", text: "جدول امتیازات", icon: <AssessmentIcon /> },
-    { link: "#", text: "فروم", icon: <ForumIcon /> },
+    { link: "/forum", text: "فروم", icon: <ForumIcon /> },
     // {
     //   link: "/Question",
     //   text: "طرح سوال",

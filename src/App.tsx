@@ -7,6 +7,8 @@ import { Routes, Route } from "react-router-dom";
 import LoginForm from "./pages/login";
 import QuickFilteringGrid from "./pages/challanges";
 import Scoreboard from "./pages/scoreboard";
+import ForumPage from "./pages/forum";
+import PostDetailPage from "./pages/postDetail";
 import Question from "./pages/question";
 import SignUpForm from "./pages/signup";
 import Profile from "./pages/profile";
@@ -45,6 +47,35 @@ const lightTheme = createTheme({
     mode: "light",
   },
 });
+
+/*const initialPosts = [
+  {
+    id: 1,
+    topic: 'بحث اول',
+    text: 'Lorem ipsum dolor sit amet.',
+    author: 'author@example.com',
+    createdAt: new Date(),
+    comments: [],
+  },
+  {
+    id: 2,
+    topic: 'بحث دوم',
+    text: 'Consectetur adipiscing elit.',
+    author: 'author2@example.com',
+    createdAt: new Date(),
+    comments: [],
+  },
+  {
+    id: 3,
+    topic: 'بحث سوم',
+    text: 'Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.',
+    author: 'author3@example.com',
+    createdAt: new Date(),
+    comments: [],
+  },
+  // Add more posts as needed
+];*/
+
 const App = () => {
   const { mode } = useAuth();
   return (
@@ -57,6 +88,8 @@ const App = () => {
           <Route path="/login" element={<LoginForm />} />
           <Route path="/challenges" element={<QuickFilteringGrid />} />
           <Route path="/Scores" element={<Scoreboard />} />
+          <Route path="/forum" element={<ForumPage />} />
+          <Route path="/post/:postId" element={<PostDetailPage />} />
           <Route path="/question" element={<Question />} />
           <Route path="/signup" element={<SignUpForm />} />
           <Route path="/profile" element={<Profile />} />
