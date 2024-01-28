@@ -1,62 +1,100 @@
-import { Box, Grid, Icon, Paper, Typography } from "@mui/material";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import profile from "../assets/profile.png";
-import { TextField, styled } from "@mui/material";
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  Container,
+  Typography,
+  List,
+  ListItem,
+  TextField,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Box, Grid, Icon, Paper, styled
+} from '@mui/material';
+import axios from 'axios';
+import TokenService from '../utils/tokenAccess';
 
 const Profile = () => {
-  const WhiteTextField = styled(TextField)({
-    "& label.Mui-focused": { color: "white" },
-    "& .MuiInput-underline:after": { borderBottomColor: "white" },
-    "& .MuiOutlinedInput-root": {
-      "& fieldset": { borderColor: "white" },
-      "&:hover fieldset": { borderColor: "white" },
-      "&.Mui-focused fieldset": { borderColor: "white" },
-    },
-    "& .MuiOutlinedInput-input": { color: "white" },
-  });
+  const [newUsername, setNewUsername] = useState('');
+  const [newEmail, setNewEmail] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [newFullName, setNewFullName] = useState('');
+  const [newBio, setNewBio] = useState('');
+
+  useEffect(() => {
+    
+  }, []); 
+
+  const handleProfileSubmit = async () => {
+  }
+
   return (
-    <>
-      <Paper
-        square={false}
-        elevation={10}
-        sx={{ m: 1, height: 600 }}
-        style={{
-          marginTop: "3%",
-          marginRight: "auto",
-          marginLeft: "auto",
-          maxWidth: "80%",
-          borderRadius: "10px",
-          direction: "rtl",
-        }}
-      >
-        <div dir="rtl">
-          <Grid container>
-            <Grid item xs={8}></Grid>
-            <WhiteTextField variant="outlined" />
-            <Grid item xs={1}></Grid>
-            <Grid item xs={3}>
-              <Box mt={"50%"} alignItems="center">
-                <img
-                  src={profile}
-                  alt="Logo"
-                  className="mx-auto"
-                  height="185"
-                  style={{ maxWidth: "500px", borderRadius: "20px" }}
-                />
-                <Typography
-                  variant="h4"
-                  fontFamily={"vazirmatn"}
-                  color={"white"}
-                  gutterBottom
-                >
-                  username
-                </Typography>
-              </Box>
-            </Grid>
-          </Grid>
-        </div>
-      </Paper>
-    </>
+    <Container maxWidth="sm">
+      <Typography marginTop={2} variant="h4" align="center" gutterBottom>
+        پروفایل
+      </Typography>
+      <TextField
+        label="نام کاربری"
+        variant="outlined"
+        fullWidth
+        // multiline
+        rows={4}
+        margin="normal"
+        value={newUsername}
+        onChange={(e) => setNewUsername(e.target.value)}
+      />
+      <TextField
+        label="ایمیل"
+        variant="outlined"
+        fullWidth
+        // multiline
+        rows={4}
+        margin="normal"
+        value={newEmail}
+        onChange={(e) => setNewEmail(e.target.value)}
+      />
+      
+      <TextField
+        label="رمز عبور"
+        variant="outlined"
+        fullWidth
+        // multiline
+        rows={4}
+        margin="normal"
+        value={newPassword}
+        onChange={(e) => setNewPassword(e.target.value)}
+      />
+      <TextField
+        label="نام کامل"
+        variant="outlined"
+        fullWidth
+        // multiline
+        rows={4}
+        margin="normal"
+        value={newFullName}
+        onChange={(e) => setNewFullName(e.target.value)}
+      />
+      <TextField
+        label="بیو"
+        variant="outlined"
+        fullWidth
+        // multiline
+        rows={4}
+        margin="normal"
+        value={newBio}
+        onChange={(e) => setNewBio(e.target.value)}
+      />
+      <Typography marginTop={2} variant="h6" align="center" gutterBottom>
+        <Button variant="contained" color="primary" onClick={handleProfileSubmit}>
+          ارسال
+        </Button>
+      </Typography>
+    </Container>
+
   );
 };
 
