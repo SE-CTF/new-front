@@ -6,8 +6,11 @@ import {
   JSXElementConstructor,
   ReactNode,
   ReactPortal,
+  useEffect,
+  useState,
 } from "react";
 import { useAuth } from "../context/AuthContext";
+import axios from "axios";
 
 createTheme(
   "solarized",
@@ -90,27 +93,41 @@ const customStyles = {
   },
 };
 
-const data = [
-  {
-    id: 1,
-    name: "شرکت کننده اول",
-    score: 10,
-  },
-  {
-    id: 2,
-    name: "شرکت کننده دوم",
-    score: 30,
-  },
-  {
-    id: 3,
-    name: "شرکت کننده سوم",
-    score: 20,
-  },
-];
 function Scoreboard() {
+  const fetchData = () => {
+    axios
+      .get("http://localhost:8000/api/scoreboard/")
+      .then(function (response) {
+        const data2 = response.data;
+
+        if (
+          Array.isArray(data2) &&
+          data2.length > 0 &&
+          data2[0].hasOwnProperty("score")
+        ) {
+          data2.sort((a, b) => b.score - a.score);
+
+        const dataWithId = data2.map((item, index) => ({
+          ...item,
+          id: index + 1, 
+        }));
+
+
+
+          console.log(dataWithId);
+
+          setData(dataWithId);
+        }
+      })
+      .catch(function (error) {});
+  };
+  useEffect(() => {
+    fetchData();
+  }, []);
   const isMobile = useMediaQuery(useTheme().breakpoints.down("sm"));
   const isTablet = useMediaQuery(useTheme().breakpoints.down("md"));
   const { mode } = useAuth();
+  const [data, setData] = useState<any>();
   const columns = [
     {
       id: 1,
@@ -125,19 +142,29 @@ function Scoreboard() {
           | ReactPortal
           | null
           | undefined;
-      }) => <div>{row.id}</div>,
+      }) => <div>{row.id?.toLocaleString("fa-EG")}</div>,
       width: isMobile ? "25%" : isTablet ? "20%" : "15%",
     },
     {
       id: 2,
       name: "نام",
-      selector: (row: { name: string }) => row.name,
+      selector: (row: { username: string }) => row.username,
       width: isMobile ? "50%" : isTablet ? "60%" : "70%",
     },
     {
       id: 3,
       name: "امتیاز",
-      selector: (row: { score: number }) => row.score,
+      cell: (row: {
+        score:
+          | string
+          | number
+          | boolean
+          | ReactElement<any, string | JSXElementConstructor<any>>
+          | Iterable<ReactNode>
+          | ReactPortal
+          | null
+          | undefined;
+      }) => <div>{row.score?.toLocaleString("fa-EG")}</div>,
       width: isMobile ? "25%" : isTablet ? "20%" : "15%",
     },
   ];
@@ -155,6 +182,7 @@ function Scoreboard() {
         elevation={10}
         style={{
           marginTop: "3%",
+          marginBottom: "3%",
           marginRight: "auto",
           marginLeft: "auto",
           maxWidth: isMobile ? "95vw" : isTablet ? "85vw" : "80vw",
@@ -166,7 +194,6 @@ function Scoreboard() {
           data={data}
           customStyles={customStyles}
           theme={mode == "dark" ? "solarized" : "solarized_light"}
-          defaultSortFieldId={3}
           pagination
           paginationComponentOptions={paginationComponentOptions}
         />

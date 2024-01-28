@@ -5,7 +5,7 @@ import React, { ReactElement } from "react";
 interface CustomTextFieldProps {
   multilline?: boolean;
   id: string;
-  type: "text" | "email" | "password";
+  type: "text" | "email" | "password" | "number";
   placeholder: string;
   label: string;
   value?: string;
@@ -20,6 +20,7 @@ interface CustomTextFieldProps {
   helperText?: string;
   icon?: ReactElement;
   disabled?: boolean;
+  ref? : any;
 }
 
 const CustomTextField = ({
@@ -40,6 +41,7 @@ const CustomTextField = ({
   helperText,
   icon,
   disabled,
+  ref,
 }: CustomTextFieldProps) => {
   const [showPassword, setShowPassword] = React.useState(false);
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -56,6 +58,7 @@ const CustomTextField = ({
           ? { ...register(name, validationRules) }
           : {})}
         helperText={helperText}
+        inputRef={ref}
         error={helperText == "" || helperText == undefined ? false : true}
         multiline={multilline == undefined ? false : multilline}
         id={id}
@@ -69,6 +72,7 @@ const CustomTextField = ({
         required={required}
         disabled={disabled == undefined ? false : disabled}
         InputProps={{
+          
           style: {
             borderRadius: "8px",
           },

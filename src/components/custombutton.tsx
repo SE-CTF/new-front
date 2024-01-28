@@ -1,25 +1,51 @@
 import { Button, Typography } from "@mui/material";
-import React from "react";
+import React, { ReactElement } from "react";
 
 interface CustomButtonProps {
-  handleClick?: () => {};
+  onClick?: Function;
   buttonText: string;
   type?: "submit" | "button" | " reset";
-  disabled?:boolean
+  disabled?: boolean;
+  color?: string;
+  variant?: "contained" | "outlined" | "text";
+  icon?: ReactElement;
+  fullWidth?: boolean;
+  typoGraphyVariant:
+    | "h1"
+    | "h2"
+    | "h3"
+    | "h4"
+    | "h5"
+    | "h6"
+    | "body1"
+    | "body2"
+    | null;
 }
 
-const CustomButton = ({ handleClick, buttonText, type , disabled }: CustomButtonProps) => {
+const CustomButton = ({
+  onClick,
+  buttonText,
+  type,
+  disabled,
+  color,
+  variant,
+  icon,
+  fullWidth,
+  typoGraphyVariant,
+}: CustomButtonProps) => {
   return (
     <>
       <Button
-        fullWidth
-        onClick={handleClick !== undefined ? handleClick : () => {}}
-        style={{ backgroundColor: "#67b26f", height: "100%", width:"100%" }}
-        variant="contained"
+        fullWidth={fullWidth == undefined ? true : fullWidth}
+        onClick={onClick !== undefined ? onClick : () => {}}
+        color={color === undefined ? "success" : color}
+        style={{ height: "100%", width: "100%" }}
+        variant={variant === undefined ? "contained" : color}
         type={type !== undefined ? type : "submit"}
-        disabled = {disabled == undefined ? false : disabled}
+        disabled={disabled == undefined ? false : disabled}
+        startIcon={icon}
       >
-        <Typography variant="h5">{buttonText}</Typography>
+        <Typography variant={typoGraphyVariant}>{buttonText}</Typography>
       </Button>
     </>
   );
