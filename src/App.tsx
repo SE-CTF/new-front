@@ -13,6 +13,7 @@ import Question from "./pages/question";
 import SignUpForm from "./pages/signup";
 import Profile from "./pages/profile";
 import School from "./pages/school";
+import UserAdmin from "./pages/userAdmin";
 import TokenService from "./utils/tokenAccess";
 import { useLocation } from "react-router-dom";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -94,6 +95,7 @@ const App = () => {
           <Route path="/signup" element={<SignUpForm />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/school" element={<School />} />
+          <Route path="/user-admin" element={<UserAdmin />} />
         </Routes>
       </ThemeProvider>
       {""}
