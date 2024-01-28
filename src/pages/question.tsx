@@ -184,7 +184,7 @@ function Question() {
         })
         .then((response) => {
           console.log(response);
-          secondAlertOpen(true);
+          setSecondAlertOpen(true);
         })
         .catch((error) => {
           console.log(error);

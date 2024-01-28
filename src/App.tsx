@@ -20,6 +20,7 @@ import { blueGrey, deepOrange } from "@mui/material/colors";
 import { CssBaseline } from "@mui/material";
 import { useAuth } from "./context/AuthContext";
 import HideOnScroll from "./components/hideOnscroll";
+import ChallengesAdmin from "./pages/adminChallange";
 const darkTheme = createTheme({
   typography: {
     fontFamily: "vazirmatn, sans-serif",
@@ -94,6 +95,7 @@ const App = () => {
           <Route path="/signup" element={<SignUpForm />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/school" element={<School />} />
+          <Route path="/challange_admin" element={<ChallengesAdmin />} />
         </Routes>
       </ThemeProvider>
       {""}
