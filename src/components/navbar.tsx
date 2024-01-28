@@ -28,6 +28,8 @@ import QuizIcon from "@mui/icons-material/Quiz";
 import HideOnScroll from "./hideOnscroll";
 import ScrollTop from "./scrollToTheTopButton";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import Person2Icon from '@mui/icons-material/Person2';
+
 const Navbar = () => {
   const [drawerOpen, setDrawerOpen] = useState(false);
   const { isUserSignedIn, changeMode, mode } = useAuth();
@@ -47,6 +49,7 @@ const Navbar = () => {
     //   show: isUserSignedIn,
     // },
     { link: "/school", text: "آکادمی", icon: <SchoolIcon /> },
+    { link: "/profile", text: "پروفایل", icon: <Person2Icon /> },
   ];
   return (
     <>
