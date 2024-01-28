@@ -53,11 +53,7 @@ const Home = () => {
             align="center"
             style={{ maxWidth: isMobile ? "100%" : isTablet ? "85%" : "70%" }}
           >
-            لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت چاپ و با
-            استفاده از طراحان گرافیک است. چاپگرها و متون بلکه روزنامه و مجله در
-            ستون و سطرآنچنان که لازم است و برای شرایط فعلی تکنولوژی مورد نیاز و
-            کاربردهای متنوع با هدف بهبود ابزارهای کاربردی می باشد. کتابهای زیادی
-            در شصت و سه درصد گذشته، حال و آینده شناخ
+            این سایت به منظور ارائه سوال و چالش در زمینه امنیت سایبری ساخته شده است/
           </Typography>
         </Box>
         <Box mt={isTablet ? "20%" : "7%"} mb={"10%"}>
@@ -71,7 +67,7 @@ const Home = () => {
               <FirstPageCustomCard
                 cardTitle={"آموزش"}
                 cardText={
-                  "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت"
+                  "با استفاده از فورم و و سوالات میتوانید مهارت های خود را ارتقا دهید"
                 }
                 cardImageSource={learn}
                 cardImageAlt={"learn"}
@@ -83,7 +79,7 @@ const Home = () => {
               <FirstPageCustomCard
                 cardTitle={"یادگیری"}
                 cardText={
-                  "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت"
+                  "امنیت سایبری را عمیقا یاد بگیرید"
                 }
                 cardImageSource={learn2}
                 cardImageAlt={"learn2"}
@@ -95,7 +91,7 @@ const Home = () => {
               <FirstPageCustomCard
                 cardTitle={"رقابت"}
                 cardText={
-                  "لورم ایپسوم متن ساختگی با تولید سادگی نامفهوم از صنعت"
+                  "با دیگران کاربران رقابت کنید"
                 }
                 cardImageSource={learning_community}
                 cardImageAlt={"learning_community"}

@@ -21,8 +21,10 @@ import FilterAltIcon from "@mui/icons-material/FilterAlt";
 import CustomTextField from "../components/customtextfield";
 import FilterDialog from "../components/filterdialog";
 import SearchIcon from "@mui/icons-material/Search";
+import CustomTagChip from "../components/CustomTagChip";
 
 interface RawDataCell {
+  id: number;
   title: string;
   score: number;
   category: string;
@@ -121,19 +123,8 @@ const columns = [
   {
     name: "دسته بندی",
     selector: (row: { category: any }) => row.category,
-  },
-  {
-    name: "حل شده",
-    selector: (row: { solved: boolean }) => row.solved,
-    cell: (row: { solved: boolean | undefined }) => (
-      <Checkbox disabled defaultChecked={row.solved} />
-    ),
-  },
-  {
-    name: "امتیاز سوال ",
-    selector: (row: { rating: number }) => row.rating,
-    cell: (row: { rating: number | null | undefined }) => (
-      <Rating name="disabled" value={row.rating} disabled />
+    cell: (row: { category: any | undefined }) => (
+      <CustomTagChip text={row.category} />
     ),
   },
 ];
@@ -142,7 +133,7 @@ const FilterComponent = ({ filterText, onFilter }) => (
   <div>
     <CustomTextField
       id={"search"}
-      type={"text"}
+      type={"search"}
       placeholder={"فیلتر کردن با اسم"}
       label={"جست و جو"}
       variant={"outlined"}
@@ -238,14 +229,15 @@ function QuickFilteringGrid() {
         return response.data;
       })
       .catch(function (error) {
-        console.log(error);
       });
   };
 
   const rawDataProcess = (rawDataCells: RawDataCell[]) => {
     const processedDatas: DataCell[] = rawDataCells.map((cell, index) => {
+      console.log(cell);
+      
       const processedData: DataCell = {
-        id: index,
+        id: cell.id,
         title: cell.title,
         diff: cell.score < 30 ? "آسان" : cell.score < 60 ? "متوسط" : "سخت",
         score: cell.score,
@@ -254,12 +246,10 @@ function QuickFilteringGrid() {
         rating: 2,
         scoreToShow: cell.score.toLocaleString("fa-EG"),
       };
-      console.log(processedData);
 
       return processedData;
     });
 
-    console.log(processedDatas);
     setProcessedData(processedDatas);
 
     return processedDatas;
@@ -298,17 +288,15 @@ function QuickFilteringGrid() {
     title: React.SetStateAction<string>;
     solved: boolean | ((prevState: boolean) => boolean);
   }) => {
-    const id = row.id + 1;
+    const id = row.id ;
 
     axios
       .get(`http://localhost:8000/api/challenges/${id}/`)
       .then(function (response) {
-        console.log(response.data);
 
         setSelectedCell(response.data);
       })
       .catch(function (error) {
-        console.log(error);
       });
     setSelectedTitle(row.title);
     setSolved(row.solved);
@@ -376,7 +364,7 @@ function QuickFilteringGrid() {
               handleItemChange={() => {}}
               title={"دسته بندی"}
               items={[
-                "Crypto",
+                "crypto",
                 "Cracking",
                 "Network",
                 "Forensics",

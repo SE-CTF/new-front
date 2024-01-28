@@ -25,6 +25,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import CustomTextField from "./customtextfield";
 import FlagIcon from "@mui/icons-material/Flag";
 import CustomButton from "./custombutton";
+import CustomTagChip from "./CustomTagChip";
 interface DialogProps {
   open: boolean;
   handleclose: () => void;
@@ -58,6 +59,9 @@ function DialogComponent({
   });
   const { register, handleSubmit } = useForm();
   const { user, isUserSignedIn } = useAuth();
+  const { mode } = useAuth();
+
+  
 
   const [alertText, setAlertText] = React.useState("");
   const [alertOpen, setAlertOpen] = useState(false);
@@ -131,7 +135,7 @@ function DialogComponent({
                   <Box display={"flex"} mt={"20%"} width={"120%"}>
                     <PersonIcon />
                     <Divider orientation="vertical" variant="fullWidth" />
-                    <Typography>۱۰ امتیاز</Typography>
+                    <Typography>    {score.toLocaleString("fa-EG")} امتیاز</Typography>
                   </Box>
                   <IconButton
                     sx={{
@@ -152,8 +156,12 @@ function DialogComponent({
         </DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {" "}
-            <Typography variant="h6">دسته بندی:{category}</Typography>
+            <Box display={"flex"}>
+              <Typography variant="h6">دسته بندی:</Typography>
+              <Box ml={"1%"}>
+                <CustomTagChip text={category} />
+              </Box>
+            </Box>
           </DialogContentText>
           <br />
           <Divider variant="middle" />
@@ -208,7 +216,7 @@ function DialogComponent({
                 <CustomTextField
                   multilline={false}
                   id={"flag"}
-                  type={""}
+                  type={"text"}
                   placeholder={"flag"}
                   label={""}
                   variant={"outlined"}
@@ -227,7 +235,12 @@ function DialogComponent({
                     height: "100%",
                   }}
                 >
-                  <CustomButton buttonText={"ثبت"} type={"submit"}  disabled={!isUserSignedIn}/>
+                  <CustomButton
+                    buttonText={"ثبت"}
+                    type={"submit"}
+                    disabled={!isUserSignedIn}
+                    typoGraphyVariant={"h5"}
+                  />
                 </div>
               </Grid>
             </Grid>

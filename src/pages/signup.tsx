@@ -76,10 +76,8 @@ const SignUpForm = () => {
 
   const onSubmit = (data: any) => {
     resetErrors();
-    console.log("Form submitted:", data);
     try {
       const validatedData = formDataSchema.parse(data);
-      console.log("Form data is valid:", validatedData);
       axios
         .post("http://localhost:8000/api/auth/signup/", data)
         .then(function (response) {
@@ -94,7 +92,6 @@ const SignUpForm = () => {
         .catch(function (error) {
           console.log(error);
           if (error.response.status == 406) {
-            console.log("sasasa");
           } else {
             handleAlert("این ایمیل یا نام کاربری قبلا ثبت شده است.", true);
           }
@@ -142,8 +139,9 @@ const SignUpForm = () => {
         elevation={10}
         sx={{
           m: 1,
-          height: "85vh",
+          minHeight: "85vh",
           marginTop: "5vh",
+          marginBottom: "3vh",
           marginRight: "auto",
           marginLeft: "auto",
           maxWidth: isMobile ? "90vw" : isTablet ? "50vw" : "30vw",
@@ -237,8 +235,9 @@ const SignUpForm = () => {
             justifyContent="center"
             alignItems="center"
             mt={"5%"}
-            ml={"5%"}
-            mr={"20%"}
+            ml={"auto"}
+            mr={"auto"}
+            pb={"3%"}
           >
             <Typography fontFamily={"vazirmatn"}>ثبت نام کرده اید؟ </Typography>
             <Box ml={"3%"}>

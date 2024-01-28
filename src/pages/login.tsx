@@ -21,6 +21,8 @@ import {
   InputAdornment,
   Alert,
   Snackbar,
+  useMediaQuery,
+  useTheme,
 } from "@mui/material";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff";
@@ -38,6 +40,8 @@ interface FormData {
 }
 
 const LoginForm = () => {
+  const isMobile = useMediaQuery(useTheme().breakpoints.down("sm"));
+  const isTablet = useMediaQuery(useTheme().breakpoints.down("md"));
   const { register, handleSubmit } = useForm();
   const [showPassword, setShowPassword] = React.useState(false);
   const [isLoggedIn, setIsLoggedIn] = React.useState(false);
@@ -99,12 +103,14 @@ const LoginForm = () => {
       <Paper
         square={false}
         elevation={10}
-        sx={{ m: 1, height: 600 }}
         style={{
-          marginTop: "3%",
+          m: 1,
+          minHeight: "85vh",
+          marginTop: "5vh",
+          marginBottom: "3vh",
           marginRight: "auto",
           marginLeft: "auto",
-          maxWidth: "30%",
+          maxWidth: isMobile ? "90vw" : isTablet ? "50vw" : "30vw",
           borderRadius: "10px",
         }}
       >
