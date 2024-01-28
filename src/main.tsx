@@ -21,7 +21,6 @@ const theme = createTheme({
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <BrowserRouter>
-    <React.StrictMode>
       <CacheProvider value={cacheRtl}>
         <ThemeProvider theme={theme}>
           <AuthProvider>
@@ -29,6 +28,5 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
           </AuthProvider>
         </ThemeProvider>
       </CacheProvider>
-    </React.StrictMode>
   </BrowserRouter>
 );

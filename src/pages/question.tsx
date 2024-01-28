@@ -347,7 +347,7 @@ function Question() {
           </Box>
           <Divider />
           <Box
-            width={isMobile ? "95%" : isTablet ? "90%" : "90%"}
+            width={isMobile ? "95%" : isTablet ? "90%" : "88%"}
             m={isMobile ? "7% 2%" : isTablet ? "4% 5%" : " 2% 5%"}
           >
             <Box
